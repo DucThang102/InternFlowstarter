@@ -7,9 +7,11 @@ const Header = ({ account, getSigner }: Headerprops) => {
     return (
         <div className="w-full flex justify-end h-10">
             {account ? (
-                <button>{account}</button>
+                <div className="text-orange-400">{account}</div>
             ) : (
-                <button onClick={getSigner}>Connect Metamask</button>
+                <div className="text-orange-400" onClick={getSigner}>
+                    Connect Metamask
+                </div>
             )}
         </div>
     );

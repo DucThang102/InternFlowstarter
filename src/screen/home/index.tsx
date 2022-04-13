@@ -111,7 +111,7 @@ const Item = ({
             {filter === "my-heroes" && (
                 <div>
                     <button
-                        className="mt-3"
+                        className="mt-3 _transfer"
                         onClick={() => {
                             setShowTransfer(true);
                             setItemTransfer(hero);

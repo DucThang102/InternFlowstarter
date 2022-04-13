@@ -9,9 +9,11 @@
 
 button {
     padding: 5px 10px;
-    border: 1px solid rgb(93, 93, 93);
+    border: none;
     border-radius: 5px;
     cursor: pointer;
+    background-color: #679f38;
+    color: #fff;
 }
 input {
     border: 1px solid #8d8d8d;
