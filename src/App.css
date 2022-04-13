@@ -1,0 +1,32 @@
+@keyframes App-logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+button {
+    padding: 5px 10px;
+    border: 1px solid rgb(93, 93, 93);
+    border-radius: 5px;
+    cursor: pointer;
+}
+input {
+    border: 1px solid #8d8d8d;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #000;
+    background-color: #fff;
+}
+input:focus {
+    outline: none;
+    box-shadow: 0 0 5px #ccc;
+    color: #333;
+    background-color: #fff;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
