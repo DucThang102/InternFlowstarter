@@ -73,7 +73,7 @@ function App() {
       const added = await client.add(file);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
-      console.log('upload');
+      console.log("upload");
     } catch (error) {
       console.log("Error uploading file: ", error);
     }
@@ -82,11 +82,7 @@ function App() {
   const handleCreateHero = async (values) => {
     setLoading(true);
     if (signer !== "") {
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        abi.abi,
-        signer
-      );
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
       try {
         const response = await contract.createHero(
           fileUrl,
@@ -96,16 +92,16 @@ function App() {
           values.star
         );
         const res = await response.wait();
-        getAllHeroes();
-        setLoading(false);
         if (res.status === 1) {
           notification.success({ message: "Create Hero Successfully" });
+          getAllHeroes();
         } else {
           notification.error({ message: "Create Hero Error" });
         }
       } catch (error) {
         console.log(error);
       }
+      setLoading(false);
     }
   };
 
@@ -134,7 +130,6 @@ function App() {
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner();
     const account = await signer.getAddress();
-    console.log(signer);
     setAccount(account);
     setSigner(signer);
     setConnected(true);
@@ -144,11 +139,7 @@ function App() {
   const getAllHeroes = async () => {
     setLoading(true);
     if (signer !== "") {
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        abi.abi,
-        signer
-      );
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
       const response = await contract.getAllHeroes();
       setHeroes(response);
     }
@@ -158,13 +149,8 @@ function App() {
   const getHeroesOfAccount = async () => {
     setLoading(true);
     if (signer !== "") {
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        abi.abi,
-        signer
-      );
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
       const response = await contract.getHeroesOfAccount();
-      console.log(response);
       setHeroes(response);
     }
     setLoading(false);
@@ -173,12 +159,7 @@ function App() {
   const handleTranfer = async () => {
     setLoading(true);
     if (signer !== "") {
-      const contract = new ethers.Contract(
-        CONTRACT_ADDRESS,
-        abi.abi,
-        signer
-      );
-      console.log(account, address, selectedHero.id);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, abi.abi, signer);
       try {
         const response = await contract.transferHero(
           account,
@@ -186,8 +167,11 @@ function App() {
           selectedHero.id
         );
         const res = await response.wait();
-        console.log(res);
-        notification.success({ message: "Transfer this hero successfully" });
+        if (res.status === 1) {
+          notification.success({ message: "Transfer this hero successfully" });
+        } else {
+          notification.error({ message: "Transfer this hero error" });
+        }
         getAllHeroes();
       } catch (error) {
         notification.error({ message: "Transfer this hero error" });
@@ -206,7 +190,7 @@ function App() {
   React.useEffect(() => {
     connectMetamask();
     // eslint-disable-next-line
-  }, [])
+  }, []);
 
   return (
     <div className="App">
