@@ -1,0 +1,19 @@
+
+
+body{
+  padding: 20px 40px
+}
+
+.loader{
+  position: fixed;
+  left: 50%;
+  top: 50%;
+}
+
+.ant-btn{
+  min-width: 100px;
+}
+
+.card{
+  margin: 10px;
+}
