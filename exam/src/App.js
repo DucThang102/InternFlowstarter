@@ -3,7 +3,7 @@ import { Button, Col, Input, Modal, Row, Space } from 'antd'
 import CreateHero from './components/createHero/createHero';
 import CardHero from './components/card/card';
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import heroAbi from './contract/HeroFi.json'
 import Loader from './components/loader/loader';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -55,7 +55,7 @@ function App() {
     }
   }
 
-  const getMyHeroesContract = async () => {
+  const getMyHeroesContract = useCallback( async () => {
     setIsLoading(true)
     try {
       const result = await contractSigner.getHeroesOfAccount()
@@ -65,7 +65,7 @@ function App() {
       setIsLoading(false)
       toast.error('error')
     }
-  }
+  }, [heroes])
 
   const handleCancel = () => {
     setIsModal(false)
@@ -87,6 +87,7 @@ function App() {
     } catch (error) {
         setIsLoading(false)
         toast.error('error')
+        console.log(error)
       }
     } else {
       setText('')
@@ -98,7 +99,7 @@ function App() {
     <div className="App">
       <Row>
         <Col span={6}>
-          <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} />
+          <CreateHero getMyHeroesContract={getMyHeroesContract} />
         </Col>
         <Col span={18}>
           <Row>

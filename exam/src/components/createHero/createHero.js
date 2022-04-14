@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { Button, Form, Input, Select, useForm } from "antd";
 import { create } from 'ipfs-http-client'
 import { contractSigner } from "../../App";
@@ -40,6 +40,7 @@ const CreateHero = ({ getMyHeroesContract, setIsLoading }) => {
     const [fileURL, setFileURL] = useState()
     const [status, setStatus] = useState(false)
 
+    console.log('vao day')
 
     const onFinish = async (value) => {
         setIsLoading(true)
@@ -128,4 +129,4 @@ const CreateHero = ({ getMyHeroesContract, setIsLoading }) => {
     )
 }
 
-export default CreateHero;
+export default memo(CreateHero);
