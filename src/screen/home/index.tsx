@@ -6,6 +6,8 @@ import Sider from "./Sider";
 import "./style.scss";
 import Model from "../../components/model";
 import Form from "./Form";
+import { FiLoader } from "react-icons/fi";
+
 export const sex = [
     { label: "Male", value: 0 },
     { label: "Female", value: 1 },
@@ -77,7 +79,9 @@ const Index = () => {
             </div>
             {loading && (
                 <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center _loading">
-                    <div>{loading}</div>
+                    <div className="flex flex-row">
+                        <FiLoader className="_loading-icon" /> {loading}
+                    </div>
                 </div>
             )}
             <Model
