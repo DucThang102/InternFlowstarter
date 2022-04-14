@@ -6,15 +6,19 @@ import { ethers } from "ethers";
 import notify from "../../../components/notify";
 
 const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState<
+        "" | "Loading..." | "Creating..." | "Transferring..."
+    >("");
     const [heroes, setHeroes] = useState<Heroes[]>([]);
-    const [filter, setFilter] = useState("all-heroes");
+    const [filter, setFilter] = useState<"all-heroes" | "my-heroes">(
+        "all-heroes"
+    );
     const [showTransfer, setShowTransfer] = useState(false);
     const [itemTransfer, setItemTransfer] = useState<Heroes>();
     const getAllHeroes = useCallback(async () => {
         try {
             if (signer) {
-                setLoading(true);
+                setLoading("Loading...");
                 if (filter === "all-heroes") {
                     const res = await API.ethers.herofi.getAllHeroes(signer);
                     setHeroes(res);
@@ -28,7 +32,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         } catch (e) {
             errorContract(e);
         } finally {
-            setLoading(false);
+            setLoading("");
         }
     }, [filter, signer]);
 
@@ -40,7 +44,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         async (data: CreateHero) => {
             try {
                 if (signer) {
-                    setLoading(true);
+                    setLoading("Creating...");
 
                     const res = await API.ethers.herofi.createHero(
                         signer,
@@ -66,7 +70,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
             } catch (e) {
                 errorContract(e);
             } finally {
-                setLoading(false);
+                setLoading("");
             }
         },
         [filter, signer]
@@ -76,7 +80,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         async (toAccount: string) => {
             if (signer && itemTransfer) {
                 try {
-                    setLoading(true);
+                    setLoading("Transferring...");
 
                     const res = await API.ethers.herofi.transferHero(
                         signer,
@@ -103,7 +107,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
                     errorContract(e);
                 } finally {
                     setShowTransfer(false);
-                    setLoading(false);
+                    setLoading("");
                 }
             }
         },

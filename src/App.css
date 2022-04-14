@@ -6,7 +6,10 @@
         transform: rotate(360deg);
     }
 }
-
+body {
+    padding: 0;
+    box-sizing: border-box;
+}
 button {
     padding: 5px 10px;
     border: none;

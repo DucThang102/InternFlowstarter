@@ -48,10 +48,10 @@ const Index = () => {
     return (
         <div className="flex w-screen h-screen flex-col overflow-hidden">
             <Header account={account} getSigner={getSigner} />
-            <div className="flex flex-row h-full">
-                <Sider createHero={createHero} />
-                <div className="flex flex-col w-full p-10 h-full overflow-auto">
-                    <div className="flex flex-row">
+            <div className="flex flex-row _content">
+                <Sider account={account} createHero={createHero} />
+                <div className="flex flex-col w-full p-10 h-full overflow-auto _items">
+                    <div className="flex flex-row _item-max-width pl-5">
                         <button
                             className="mr-5"
                             onClick={() => setFilter("all-heroes")}
@@ -62,7 +62,7 @@ const Index = () => {
                             My Heroes
                         </button>
                     </div>
-                    <div className="flex flex-wrap">
+                    <div className="flex flex-wrap _item-max-width">
                         {heroes.map((hero, i) => (
                             <Item
                                 setItemTransfer={setItemTransfer}
@@ -77,10 +77,14 @@ const Index = () => {
             </div>
             {loading && (
                 <div className="fixed top-0 left-0 w-full h-full flex justify-center items-center _loading">
-                    <div>Loading...</div>
+                    <div>{loading}</div>
                 </div>
             )}
-            <Model show={showTransfer} onClose={() => setShowTransfer(false)}>
+            <Model
+                className="_modal-form"
+                show={showTransfer}
+                onClose={() => setShowTransfer(false)}
+            >
                 <Form transfer={transfer} />
             </Model>
         </div>

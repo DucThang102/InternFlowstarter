@@ -6,18 +6,20 @@
             margin-top: 20px;
         }
     }
-}
-._item {
-    width: 250px;
-    margin: 10px 20px;
-    text-align: center;
-    .img {
-        text-align: center;
+    ._uploading {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #c6c6c6cf;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        // color: white;
     }
-    p {
-        font-size: 20px;
-    }
 }
+
 ._max-width {
     max-width: 1200px;
 }
@@ -28,7 +30,71 @@
 ._transfer {
     color: #7bb7e2;
     background-color: white;
-    box-shadow: 0 6px 16px -8px #00000014, 0 9px 28px #0000000d,
-        0 12px 48px 16px #00000008;
+    box-shadow: 0 2px 0px 0px #00000030, 0 2px 2px #0000000d,
+        0 2px 30px 10px #00000008;
     padding: 5px 15px;
+}
+._content {
+    height: calc(100% - 61px);
+    ._item-max-width {
+        max-width: 1160px;
+        width: 100%;
+        margin: 0 auto;
+    }
+    ._item {
+        width: 250px;
+        margin: 10px 20px;
+        text-align: center;
+        box-shadow: 0 6px 16px -8px #00000014, 0 9px 28px #0000000d,
+            0 12px 48px 16px #00000008;
+        border-radius: 5px;
+        padding: 20px 10px;
+        .img {
+            // text-align: center;
+            padding-top: 56.25% !important;
+            position: relative;
+            height: auto;
+            img {
+                height: 100%;
+                top: 0;
+                position: absolute;
+                object-fit: cover;
+            }
+        }
+        p {
+            font-size: 20px;
+        }
+    }
+}
+._modal-form {
+    border-radius: 2px;
+}
+@media only screen and (max-width: 1510px) {
+    ._content {
+        ._item-max-width {
+            max-width: 870px;
+        }
+    }
+}
+@media only screen and (max-width: 1210px) {
+    ._content {
+        ._item-max-width {
+            max-width: 580px;
+        }
+    }
+}
+@media only screen and (max-width: 910px) {
+    ._content {
+        ._item-max-width {
+            max-width: 290px;
+        }
+        ._items {
+            padding: 2px;
+        }
+    }
+    ._sider {
+        padding-right: 2px;
+        padding-left: 10px;
+        width: 200px;
+    }
 }

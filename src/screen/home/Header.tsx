@@ -5,11 +5,14 @@ type Headerprops = {
 
 const Header = ({ account, getSigner }: Headerprops) => {
     return (
-        <div className="w-full flex justify-end h-10">
+        <div className="w-full flex justify-end py-5 px-10">
             {account ? (
-                <div className="text-orange-400">{account}</div>
+                <div className="text-orange-400 cursor-pointer">{account}</div>
             ) : (
-                <div className="text-orange-400" onClick={getSigner}>
+                <div
+                    className="text-orange-400 cursor-pointer"
+                    onClick={getSigner}
+                >
                     Connect Metamask
                 </div>
             )}

@@ -4,29 +4,41 @@ import { create as ipfsHttpClient } from "ipfs-http-client";
 import React, { useState } from "react";
 import { CreateHero } from "../../api/ethers/repo/HeroFi";
 import configs from "../../config/const";
+import notify from "../../components/notify";
 const client = ipfsHttpClient({ url: configs.IPFS_URL });
 const { Option } = Select;
 
 type SiderProps = {
     createHero: (data: any) => Promise<void>;
+    account: string;
 };
 
-const Sider = ({ createHero }: SiderProps) => {
+const Sider = ({ createHero, account }: SiderProps) => {
     const [file, setFile] = useState<any>(null);
     const [generationValue, setGenerationValue] = useState<number>();
     const [classValue, setClassValue] = useState<number>();
     const [starValue, setStarValue] = useState<number>();
     const [sexValue, setSexValue] = useState<number>();
+    const [uploading, setUploading] = useState(false);
 
     const createIPFS = async () => {
-        if (file) {
+        try {
+            setUploading(true);
             const added = await client.add(file[0]);
             return `${configs.IPFS_BASE}/${added.path}`;
+        } catch {
+            notify.error("Upload file không thành công");
+        } finally {
+            setUploading(false);
         }
     };
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!file) {
+            notify.error("Avatar không được để trống");
+            return;
+        }
         const avatar = await createIPFS();
         console.log({
             avatar,
@@ -36,20 +48,28 @@ const Sider = ({ createHero }: SiderProps) => {
             sexValue,
         });
 
-        // if (avatar && generationValue && classValue && starValue && sexValue) {
-        createHero(
-            new CreateHero(
-                avatar,
-                classValue,
-                sexValue,
-                generationValue,
-                starValue
-            )
-        );
-        // }
+        if (
+            avatar &&
+            typeof generationValue !== "undefined" &&
+            typeof classValue !== "undefined" &&
+            typeof starValue !== "undefined" &&
+            typeof sexValue !== "undefined"
+        ) {
+            createHero(
+                new CreateHero(
+                    avatar,
+                    classValue,
+                    sexValue,
+                    generationValue,
+                    starValue
+                )
+            );
+        } else {
+            notify.error("Không được để trống dữ liệu");
+        }
     };
     return (
-        <div className="_sider flex flex-col pt-10 px-5">
+        <div className="_sider flex flex-col pt-10 px-5 relative">
             <form onSubmit={onSubmit} className="w-full overflow-hidden">
                 <label>
                     Avatar
@@ -111,10 +131,13 @@ const Sider = ({ createHero }: SiderProps) => {
                         </Option>
                     ))}
                 </Select>
-                <div className="mt-5">
-                    <button type="submit">Create Hero</button>
-                </div>
+                {account && (
+                    <div className="mt-5">
+                        <button>Create Hero</button>
+                    </div>
+                )}
             </form>
+            {uploading && <div className="_uploading">Uploading image</div>}
         </div>
     );
 };

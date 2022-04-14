@@ -12,15 +12,25 @@ const Form = ({ transfer }: FormProps) => {
         setValue("");
     };
     return (
-        <form onSubmit={onSubmit} className="p-10 flex flex-col">
-            <h1 className="text-2xl mb-5">Địa chỉ </h1>
+        <form onSubmit={onSubmit} className="p-5 flex flex-col">
             <input
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder="Nhập địa chỉ"
+                placeholder="Nhập địa chỉ ví"
             />
-            <div className="mt-5 ">
-                <button className="bg-green-600 text-white">Transfer</button>
+            <div className="mt-5 flex justify-end">
+                <button
+                    type="submit"
+                    className="bg-green-500 text-red-600 border border-solid border-gray-400"
+                >
+                    Transfer
+                </button>
+                <button
+                    type="button"
+                    className="bg-white text-red-600 ml-3 border border-solid border-gray-400"
+                >
+                    Cancel
+                </button>
             </div>
         </form>
     );

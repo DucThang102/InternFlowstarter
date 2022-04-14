@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import "./style.scss";
 type propsModal = {
-    children: any;
+    children: JSX.Element;
     show: boolean;
     onClose: any;
+    className?: string;
 };
 
 const Modal = (props: propsModal) => {
-    const { children, show, onClose } = props;
+    const { children, show, onClose, className } = props;
     const [showElemamt, setShowElement] = useState(show);
 
     const escFunction = useCallback(
@@ -42,7 +43,13 @@ const Modal = (props: propsModal) => {
     }
     return (
         <div className={show ? "_modal _modal-show" : "_modal _modal-not-show"}>
-            <div className={"modal-children"}>{children}</div>
+            <div
+                className={
+                    "modal-children" + (className ? ` ${className}` : "")
+                }
+            >
+                {children}
+            </div>
             <div
                 style={{ display: show ? "block" : "none" }}
                 onClick={onClose}

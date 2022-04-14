@@ -9,6 +9,10 @@ const useAccount = () => {
     const [account, setAccount] = useState("");
     const getSigner = useCallback(async () => {
         try {
+            const ethereum = window.ethereum;
+            if (!ethereum) {
+                throw new Error("Please install MetaMask!");
+            }
             const web3Modal = new Web3Modal();
             const connection = await web3Modal.connect();
             const provider = new ethers.providers.Web3Provider(connection);
