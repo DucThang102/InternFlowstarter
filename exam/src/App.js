@@ -71,6 +71,7 @@ function App() {
     setIsModal(false)
     setCurrentHero(null)
     setText(null)
+    setIsLoading(false)
   }
 
   const handleOk = async () => {
