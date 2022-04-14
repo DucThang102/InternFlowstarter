@@ -5,6 +5,10 @@ function errorContract(err: any) {
             notify.error(err.data.message);
             return;
         }
+        if (typeof err.error !== "undefined") {
+            notify.error(err.error.message);
+            return;
+        }
         notify.error(err.message);
     } catch {
         notify.error("Đã có lỗi sảy ra, bạn vui lòng thử lại sau");

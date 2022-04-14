@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import { CreateHero } from "../../api/ethers/repo/HeroFi";
 import configs from "../../config/const";
 import notify from "../../components/notify";
+import ButtonUpload from "../../components/button_upload";
 const client = ipfsHttpClient({ url: configs.IPFS_URL });
 const { Option } = Select;
 
@@ -35,26 +36,16 @@ const Sider = ({ createHero, account }: SiderProps) => {
 
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!file) {
-            notify.error("Avatar không được để trống");
-            return;
-        }
-        const avatar = await createIPFS();
-        console.log({
-            avatar,
-            generationValue,
-            classValue,
-            starValue,
-            sexValue,
-        });
 
         if (
-            avatar &&
+            file &&
             typeof generationValue !== "undefined" &&
             typeof classValue !== "undefined" &&
             typeof starValue !== "undefined" &&
             typeof sexValue !== "undefined"
         ) {
+            const avatar = await createIPFS();
+            if (!avatar) return;
             createHero(
                 new CreateHero(
                     avatar,
@@ -71,14 +62,15 @@ const Sider = ({ createHero, account }: SiderProps) => {
     return (
         <div className="_sider flex flex-col pt-10 px-5 relative">
             <form onSubmit={onSubmit} className="w-full overflow-hidden">
-                <label>
-                    Avatar
+                <p>Avatar</p>
+                {/* <label>
                     <input
                         className="w-full"
                         onChange={(e) => setFile(e.target.files)}
                         type="file"
                     />
-                </label>
+                </label> */}
+                <ButtonUpload onChange={(e) => setFile(e.target.files)} />
                 <label htmlFor="class">Class</label>
                 <Select
                     onChange={(value) => setClassValue(value)}
