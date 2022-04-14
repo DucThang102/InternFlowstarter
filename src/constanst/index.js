@@ -25,3 +25,6 @@ export const start = [
     {label: 'FIVE', value: 4},
     {label: 'SIX', value: 5},
 ];
+
+export const somethingError = 'Something error';
+export const transferError = "There's something wrong";

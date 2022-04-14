@@ -23,29 +23,27 @@ html, body{
 .lists{
     display: flex;
     flex-wrap: wrap;
-    /* justify-content: space-between; */
+    justify-content: center;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 10px;
 }
 .btn_hero{
-    display: flex;
-    justify-content: flex-end;
-    width: 100%;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
-    background-color: rgba(0, 0, 0, 0.8);
+    /* border-bottom: 1px solid rgba(0,0,0,0.1); */
+    margin-left: 10px;
 }
 .btn_all{
     background-color: goldenrod;
     color: #fff;
-    border: 1px solid #adadad;
+    border-radius: 5px;
 }
 .btn_my{
     background-color: green;
     color: #fff;
-    margin-left: 5px;
-    border: 1px solid #adadad;
+    border-radius: 5px;
 }
 
 .card{
-    width: 240px;
+    width: 210px;
     height: auto;
     text-align: center;
     padding: 10px;
@@ -59,11 +57,81 @@ html, body{
     height: 100px;
     border-radius: 50% !important;
 }
+.ant-btn{
+    min-width: 100px;
+    padding: 0 !important;
+}
+.logo_title{
+    display: flex;
+    align-items: center;
+}
+.logo_title img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+.logo_title h2{
+    margin-bottom: 0 !important;
+    font-family: sans-serif;
+    font-weight: 600;
+}
+
+.custom-file-input {
+    color: transparent;
+  }
+.custom-file-input::-webkit-file-upload-button {
+    visibility: hidden;
+  }
+.custom-file-input::before {
+    content: 'Select some files';
+    color: black;
+    display: inline-block;
+    outline: none;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 10pt;
+}
+.ant-input:focus{
+    outline: none !important;
+}
+@media only screen and (max-width: 767px){
+    .lists{
+        display: flex;
+        justify-content: center;
+    }
+    .card{
+        width: 200px;
+    }
+}
+@media only screen and (max-width: 650px){
+    .lists{
+        display: flex;
+        justify-content: center;
+    }
+    .card{
+        width: 240px;
+    }
+}
 @media only screen and (max-width: 580px){
     .heroes{
-        flex-direction: column;
+        flex-direction: column
     }
     .listheroes{
         margin: 0;
+    }
+    .lists{
+        display: flex;
+        justify-content: center;
+    }
+    .card{
+        width: 200px;
+    }
+}
+@media only screen and (max-width: 420px){
+    .title{
+        display: block;
+    }
+    .card{
+        width: 240px;
     }
 }
