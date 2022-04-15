@@ -1,8 +1,6 @@
 .layout{
-	margin: 50px 10px;
-	/* display: flex;
-	align-items: center; */
-	/* background-color: aqua; */
+	padding: 40px;
+	background-color: azure;
 }
 .form_create{
 	width: 90%;
@@ -10,19 +8,27 @@
 .content_top{
 	display: flex;
 	justify-content: space-between;
-	margin: 10px 10px
+	margin: 10px 15px
 }
 .btn_left{
 	display: flex;
 	justify-content: space-between;
 }
 .content_list{
-	margin: 20px 10px;
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	margin-left: -15px;
 }
 .card_style{
-	width: 150px;
-	margin-right: 15px;
-	margin-bottom: 15px;
+	width: calc(25% - 30px);
+	box-sizing: border-box;
+	border-radius: 10px;
+	margin-left: 30px;
+	margin-bottom: 30px;
+	/* background-color: aqua; */
+	display: flex;
+	justify-content: center;
 }
 .card_image{
 	width: 100px;
@@ -37,10 +43,6 @@
 .card_content{
 	margin: 10px auto;
 }
-.content_list{
-	display: flex;
-	flex-wrap: wrap;
-}
 @media only screen and (max-width: 800px) {	
 	.content_top{
 		flex-direction: column-reverse;
@@ -48,4 +50,24 @@
 	.btn_left{
 		display: block;
 	}
+}
+@media only screen and (min-width: 1600px) {
+
+}
+@media only screen and (min-width: 1200px) {
+	.content_list{
+
+	}
+	.card_style{
+		
+	}
+}
+@media only screen and (min-width: 992px) {
+	
+}
+@media only screen and (min-width: 768px) {
+	
+}
+@media only screen and (min-width: 576px) {
+	
 }
