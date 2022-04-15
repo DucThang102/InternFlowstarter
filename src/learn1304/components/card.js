@@ -12,10 +12,8 @@ const SEX = [
 	}
 ]
 
-
-
 const CardHero = (props) => {
-	const { data, handleTransfer } = props
+	const { data, handleTransfer, isConnect } = props
 	const [onTransfer, setOnTransfer] = useState(false)
 	const [value, setValue] = useState('')
 	const [heroTransfer, setHeroTransfer] = useState()
@@ -54,9 +52,13 @@ const CardHero = (props) => {
 							<p>Generation: {hero?.generation}</p>
 							<p>Star: {hero?.star}</p>
 						</div>
-						<div className='card_bottom'>
-							<Button onClick={() => onHandleTransfer(hero)}>Transfer</Button>
-						</div>
+						{
+							isConnect 
+							&&
+							<div className='card_bottom'>
+								<Button onClick={() => onHandleTransfer(hero)}>Transfer</Button>
+							</div>
+						}
 					</Card>
 				</>
 			))}

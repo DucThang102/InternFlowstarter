@@ -86,16 +86,16 @@ const FormCreate = (props) => {
 					layout="vertical"
 					autoComplete="off"
 					initialValues={{
-						Avatar: '',
-						Class: HERO_CLASS[0].value,
-						Generation: GENERATION[0].value,
-						Sex: SEX[0].value,
-						Star: STAR[0].value
+						avatar: '',
+						class: HERO_CLASS[0].value,
+						generation: GENERATION[0].value,
+						sex: SEX[0].value,
+						star: STAR[0].value
 					}}
 				>
 				<Col span={24}>
 					<Form.Item
-						name="Avatar"
+						name="avatar"
 						label='Avatar'
 					>
 						<Input type={'file'} onChange={handleChangeAvatar}/>
@@ -103,7 +103,7 @@ const FormCreate = (props) => {
 				</Col>
 				<Col span={24}>
 					<Form.Item
-						name="Class"
+						name="class"
 						label='Class'
 					>
 						<Select
@@ -118,7 +118,7 @@ const FormCreate = (props) => {
 				</Col>
 				<Col span={24}>
 					<Form.Item
-						name="Sex"
+						name="sex"
 						label='Sex'
 					>
 						<Select
@@ -132,7 +132,7 @@ const FormCreate = (props) => {
 				</Col>
 				<Col span={24}>
 					<Form.Item
-						name="Generation"
+						name="generation"
 						label='Generation'
 					>
 						<Select
@@ -147,7 +147,7 @@ const FormCreate = (props) => {
 				</Col>
 				<Col span={24}>
 					<Form.Item
-						name="Star"
+						name="star"
 						label='Star'
 					>
 						<Select

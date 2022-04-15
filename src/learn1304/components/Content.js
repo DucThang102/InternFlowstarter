@@ -35,7 +35,7 @@ const Content = (props) => {
 				}
 			</div>
 			<div className='content_list'>
-				<CardHero data={heros} handleTransfer={handleTransfer} />
+				<CardHero data={heros} handleTransfer={handleTransfer} isConnect={isConnect} />
 			</div>
 		</>
 	)
