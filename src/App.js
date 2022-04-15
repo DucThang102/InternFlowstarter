@@ -71,7 +71,9 @@ function App() {
       await setContract(contractRes);
       const account = await signer.getAddress();
       setAddressAccount(account);
+      toast("Ket noi MetaMask thanh cong !");
     } catch (error) {
+      toast("Ket noi MetaMask that bai !");
       throw error;
     }
   };
@@ -111,7 +113,7 @@ function App() {
     try {
       const { avatar, heroClass, sex, generation, star } = dataInput;
       if(avatar === "")
-        toast("Please select an image !");
+        toast("Vui long chon anh !");
       else {
         const res = await contract.createHero(avatar, heroClass, sex, generation, star);
         const { status } = await res.wait();
@@ -119,11 +121,11 @@ function App() {
           getAllHeroesAccount();
         }
         else {
-          toast("Failed to create hero !");
+          toast("Tao hero that bai !");
         }
       }
     } catch (error) {
-      toast("Failed to create hero !");
+      toast("Tao hero that bai !");
       throw error;
     }
   };
@@ -132,10 +134,10 @@ function App() {
   const transferHero = async (e) => {
     e.preventDefault();
     if(addressAccount === "")
-      toast("Please connect your MetaMask !");
+      toast("Hay ket noi voi MetaMask truoc !");
     else {
       if(transferAccount === "") 
-        toast("Please input an transfer MetaMask account !");
+        toast("Hay nhap tai khoan nhan !");
       else {
         try {
           /* 0x46431225342257388cA3FD6248C0db14D055bb4c */
@@ -143,16 +145,16 @@ function App() {
           console.log("Transfer");
           const { status } = await res.wait();
           if(status === 1) {
-            toast("Succesfull transfer !");
+            toast("Chuyen doi thanh cong !");
             setTransferAccount("");
             setToggle(false);
             getAllHeroesAccount();
           }
           else {
-            toast("Failed to transfer !");
+            toast("Chuyen doi that bai !");
           }
         } catch (error) {
-          toast("Failed to transfer !");
+          toast("Chuyen doi that bai !");
           throw error;
         }
       }
@@ -168,9 +170,14 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    inputRef.current.focus();
+  }, [toggle])
+
   return (
     <div className="App">
-      <ToastContainer position="top-center" autoClose={5000} pauseOnHover={false} />
+      <ToastContainer position="top-center" autoClose={4000} pauseOnHover={false} />
+
       <form className="form">
         <div className="form-group">
           <label htmlFor="avatar">Avatar:</label>
@@ -277,7 +284,6 @@ function App() {
                       })
                     }} className="btn--details">Details</button>
                     <button onClick={() => {
-                      inputRef.current.focus();
                       setToggle(!toggle);
                       setTransferData(item);
                     }}>Transfer</button>
@@ -307,7 +313,10 @@ function App() {
               >
                 Transfer
               </button>
-              <button type="reset" className="transfer-button transfer-button--cancel" onClick={() => inputRef.current.focus()}>
+              <button type="reset" className="transfer-button transfer-button--cancel" onClick={() => {
+                inputRef.current.focus();
+                setTransferAccount("");
+              }}>
                 Cancel
               </button>
             </div>

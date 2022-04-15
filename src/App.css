@@ -17,6 +17,21 @@
   margin-bottom: 20px;
 }
 
+/* Upload image style */
+::-webkit-file-upload-button {
+  outline: none;
+  display: block;
+  padding: 6px 14px;
+  margin: 0 10px 10px 0;
+  border: 1px solid rgba(0,0,0,0.3);
+  background-color: #fff;
+  cursor: pointer;
+}
+
+::-webkit-file-upload-button:hover {
+  background-color: rgba(0,0,0,0.08);
+}
+
 .form-group input, .form-group select {
   display: block;
   margin-top: 8px;
@@ -32,6 +47,7 @@
   width: 120px;
   padding: 6px 8px;
   border: 1px solid rgba(0,0,0,0.3);
+  cursor: pointer;
 }
 
 .btn {
