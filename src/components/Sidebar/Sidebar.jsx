@@ -1,14 +1,18 @@
 import { PhotoCamera } from "@mui/icons-material";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, CircularProgress, IconButton, Input } from "@mui/material";
+import { Box, Button, Input, Stack } from "@mui/material";
 import { create } from "ipfs-http-client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import imgGrey from "../../assets/200x120-a1a1aa7f.png";
 import useContract from "../../hooks/useContract";
+import { notify } from "../../utils/toastify";
 import FieldSelect from "../FieldSelect/FieldSelect";
 
-function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
+function Sidebar({ signer, getHeroOfAccount }) {
   const client = create("https://ipfs.infura.io:5001/api/v0");
+
+  const [imgPreview, setImgPreview] = useState("");
   const [loadingUpload, setLoadingUpload] = useState(false);
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const contract = useContract(signer);
@@ -44,6 +48,10 @@ function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
     },
   ];
 
+  useEffect(() => {
+    return () => URL.revokeObjectURL(imgPreview);
+  }, [imgPreview]);
+
   const handleChange = async (e) => {
     setLoadingUpload(true);
     const file = e.target.files[0];
@@ -54,10 +62,22 @@ function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
         ...formValues,
         fileUrl: url,
       });
+      setImgPreview(URL.createObjectURL(file));
     } catch (error) {
       console.log(error);
     }
     setLoadingUpload(false);
+  };
+
+  const resetFormValues = () => {
+    setFormValue({
+      fileUrl: "",
+      class: 0,
+      sex: 0,
+      generation: 0,
+      star: 0,
+    });
+    setImgPreview("");
   };
 
   const handleSelect = (newValue) => {
@@ -68,8 +88,12 @@ function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
   };
 
   const handleSubmit = async () => {
+    if (!signer) {
+      notify.error("You aren't connect to wallet");
+      return;
+    }
     if (!formValues.fileUrl) {
-      setSnackbar({ type: "error", msg: "No photo yet" });
+      notify.error("No photo yet");
       return;
     }
     setLoadingSubmit(true);
@@ -84,11 +108,12 @@ function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
       );
       const status = (await res.wait()).status;
       if (status === 1) {
-        setSnackbar({ type: "success", msg: "Create hero success" });
+        notify.success("Create hero success");
         getHeroOfAccount();
+        resetFormValues();
       }
     } catch (error) {
-      setSnackbar({ type: "error", msg: "You aren't connect to wallet" });
+      notify.error("Something went wrong");
       console.log(error);
     }
     setLoadingSubmit(false);
@@ -97,26 +122,38 @@ function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
   return (
     <>
       <Box>
-        <Box>
-          <label htmlFor="icon-button-file">
-            <Input
-              sx={{ display: "none" }}
-              accept="image/*"
-              id="icon-button-file"
-              type="file"
-              onChange={handleChange}
-            />
-            <IconButton
-              color="primary"
-              aria-label="upload picture"
-              component="span"
-              disabled={loadingUpload}
+        <Stack>
+          <img
+            style={{ objectFit: "cover", maxWidth: "100%" }}
+            src={imgPreview || imgGrey}
+            alt=""
+          />
+          <Stack direction="row" alignItems="center">
+            <label
+              style={{ width: "100%" }}
+              htmlFor={!loadingUpload ? "icon-button-file" : ""}
             >
-              <PhotoCamera />
-            </IconButton>
-          </label>
-          {loadingUpload && <CircularProgress size={18} color="secondary" />}
-        </Box>
+              <Input
+                sx={{ display: "none" }}
+                accept="image/*"
+                id="icon-button-file"
+                type="file"
+                onChange={handleChange}
+              />
+              <LoadingButton
+                sx={{ mt: 1 }}
+                fullWidth
+                loading={loadingUpload}
+                loadingPosition="start"
+                startIcon={<PhotoCamera />}
+                variant="contained"
+                component="span"
+              >
+                Photo
+              </LoadingButton>
+            </label>
+          </Stack>
+        </Stack>
         <Box mt={2.8}>
           {fields.map((field) => {
             const { title, defaultValue, values } = field;
@@ -131,15 +168,27 @@ function Sidebar({ signer, getHeroOfAccount, setSnackbar }) {
             );
           })}
         </Box>
-        <LoadingButton
-          onClick={handleSubmit}
-          loading={loadingSubmit}
-          loadingPosition="start"
-          startIcon={<AddCircleOutlineIcon />}
-          variant="contained"
+        <Stack
+          sx={{
+            flexDirection: { md: "column", lg: "row" },
+            rowGap: { xs: 1 },
+            columnGap: { lg: 1 },
+          }}
         >
-          Create
-        </LoadingButton>
+          <Button fullWidth onClick={resetFormValues} variant="outlined">
+            Clear
+          </Button>
+          <LoadingButton
+            fullWidth
+            onClick={handleSubmit}
+            loading={loadingSubmit}
+            loadingPosition="start"
+            startIcon={<AddCircleOutlineIcon />}
+            variant="contained"
+          >
+            Create
+          </LoadingButton>
+        </Stack>
       </Box>
     </>
   );

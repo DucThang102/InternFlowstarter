@@ -3,9 +3,9 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Backdrop, CardList, Header, Sidebar } from "./components";
-import SnackbarCustom from "./components/Snackbar/Snackbar";
 import abi from "./HeroFi.json";
 import useContract from "./hooks/useContract";
+import { notify } from "./utils/toastify";
 
 function App() {
   const CONTRACT_ADDRESS = "0x7575c71C24091954d219d59E3513b59f8F8a552f";
@@ -14,13 +14,12 @@ function App() {
   const [data, setData] = useState([]);
   const [account, setAccount] = useState("");
   const [signer, setSigner] = useState(null);
-  const [errSigner, setErrSigner] = useState();
   const contract = useContract(signer);
 
   useEffect(() => {
     (async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         await getAllHero();
       } catch (error) {
         console.log(error);
@@ -30,12 +29,18 @@ function App() {
   }, []);
 
   const connectWallet = async () => {
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const accountAddress = (await provider.send("eth_requestAccounts", []))[0];
-    const signer = provider.getSigner();
+    try {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const accountAddress = (
+        await provider.send("eth_requestAccounts", [])
+      )[0];
+      const signer = provider.getSigner();
 
-    setAccount(accountAddress);
-    setSigner(signer);
+      setAccount(accountAddress);
+      setSigner(signer);
+    } catch (error) {
+      notify.error(error.message);
+    }
   };
 
   const getAllHero = async () => {
@@ -46,10 +51,9 @@ function App() {
   };
 
   const getHeroOfAccount = async () => {
-    if (!signer)
-      setErrSigner({ type: "error", msg: "You aren't connect to wallet" });
+    if (!signer) notify.error("You aren't connect to wallet");
+    setLoading(true);
     try {
-      setLoading(true);
       const res = await contract.getHeroesOfAccount();
       setData(res);
     } catch (error) {
@@ -58,23 +62,17 @@ function App() {
     setLoading(false);
   };
 
-  const handleSnackbar = (newValue) => {
-    setErrSigner(newValue);
-  };
-
   return (
     <>
-      <Box px={{ xs: 2, sm: 3, md: 5 }}>
-        <Header account={account} onConnect={connectWallet} />
+      <Box
+        sx={{ maxWidth: "1440px", m: "0 auto", px: { xs: 2, sm: 3, md: 5 } }}
+      >
+        <Header currentAcc={account} onConnect={connectWallet} />
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={3}>
-            <Sidebar
-              signer={signer}
-              setSnackbar={handleSnackbar}
-              getHeroOfAccount={getHeroOfAccount}
-            />
+          <Grid item xs={12} sm={2.5}>
+            <Sidebar signer={signer} getHeroOfAccount={getHeroOfAccount} />
           </Grid>
-          <Grid item xs={12} sm={9}>
+          <Grid item xs={12} sm={9.5}>
             <Stack columnGap={2} direction="row">
               <Button
                 onClick={getHeroOfAccount}
@@ -93,7 +91,6 @@ function App() {
             </Stack>
             <CardList
               currentAcc={account}
-              setSnackbar={handleSnackbar}
               signer={signer}
               data={data}
               getHeroOfAccount={getHeroOfAccount}
@@ -102,12 +99,6 @@ function App() {
         </Grid>
       </Box>
       <Backdrop show={loading} />
-      <SnackbarCustom
-        open={Boolean(errSigner)}
-        type={errSigner?.type}
-        onClose={() => setErrSigner(false)}
-        msg={errSigner?.msg}
-      />
     </>
   );
 }

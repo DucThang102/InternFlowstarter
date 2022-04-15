@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import React from "react";
 
-function Header({ onConnect, account }) {
+function Header({ onConnect, currentAcc }) {
   return (
     <Box py={4}>
       <Button
@@ -10,7 +10,7 @@ function Header({ onConnect, account }) {
         size="small"
         variant="outlined"
       >
-        {account || "Connect Metamask"}
+        {currentAcc || "Connect Metamask"}
       </Button>
     </Box>
   );

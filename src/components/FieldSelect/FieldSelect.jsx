@@ -13,7 +13,7 @@ export default function FieldSelect({ title, defaultValue, values, onSelect }) {
 
   return (
     <Box>
-      <FormControl sx={{ minWidth: 120, width: "100%", mb: 2 }} size="small">
+      <FormControl sx={{ width: "100%", mb: 2 }} size="small">
         <InputLabel id="demo-select-small">{title}</InputLabel>
         <Select
           labelId="demo-select-small"
