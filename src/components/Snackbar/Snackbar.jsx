@@ -9,8 +9,8 @@ function SnackbarCustom({ open, type, onClose, msg }) {
     onClose();
   };
   return (
-    <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-      <Alert onClose={handleClose} severity={type} sx={{ width: "100%" }}>
+    <Snackbar open={open} autoHideDuration={1000000} onClose={handleClose}>
+      <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
         {msg}
       </Alert>
     </Snackbar>
