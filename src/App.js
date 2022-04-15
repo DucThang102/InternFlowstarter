@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import "./App.css";
 import Loading from './components/Loading/Loading';
+import CardItem from "./components/CardItem/CardItem";
 
 import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
@@ -31,6 +32,7 @@ function App() {
   });
 
   const [contract, setContract] = useState(null);
+  const [signer, setSigner] = useState(null);
   const [transferAccount, setTransferAccount] = useState("");
   const [transferData, setTransferData] = useState({});
 
@@ -56,19 +58,13 @@ function App() {
         avatar: url,
       });
     } catch (error) {
-      toast(`Error uploading file: ${error} !`);
+      toast(`Loi upload: ${error} !`);
     }
   }
 
   /* Connect MetaMask */
   const connectMetaMask = async () => {
     try {
-      //Will Start the metamask extension
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
-      const contractRes = new ethers.Contract(address, data.abi, signer);
-      await setContract(contractRes);
       const account = await signer.getAddress();
       setAddressAccount(account);
       toast("Ket noi MetaMask thanh cong !");
@@ -85,7 +81,9 @@ function App() {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       await provider.send("eth_requestAccounts", []);
       const signer = await provider.getSigner();
+      setSigner(signer);
       const contractRes = new ethers.Contract(address, data.abi, signer);
+      setContract(contractRes);
       const heroRes = await contractRes.getAllHeroes();
       const heroResExecuted = heroRes.map(item => Object.assign({}, item));
       setAllHeroes([...heroResExecuted]);
@@ -159,6 +157,28 @@ function App() {
         }
       }
     }
+  }
+
+  const setTransferDataCb = (item) => {
+    setTransferData(item);
+  }
+
+  const setModalDataCb = (item) => {
+    setModalData({
+      ...modalData,
+      heroClass: heroClass.find((item2) => item2.value === item.class).label,
+      sex: sex.find((item2) => item2.value === item.sex).label,
+      generation: generation.find((item2) => item2.value === item.generation).label,
+      star: star.find((item2) => item2.value === item.star).label
+    })
+  }
+
+  const setToggleCb = () => {
+    setToggle(!toggle)
+  }
+
+  const setToggle2Cb = () => {
+    setToggle2(!toggle2)
   }
 
   useEffect(() => {
@@ -255,41 +275,15 @@ function App() {
           <ul className="container-list">
             {loading ? <Loading />
             : (allHeroes.length === 0 ? "No Heroes" 
-            : (allHeroes.map((item, index) => {
-                return (
-                  <li className="container-item" key={index}>
-                    <img src={item.avatar} alt={`img ${index + 1}`} />
-                    <div className="container-item-data">
-                      <span>Class:
-                        <span>{heroClass.find((item2) => item2.value === item.class).label}</span>
-                      </span>
-                      <span>Sex:
-                        <span>{sex.find((item2) => item2.value === item.sex).label}</span>
-                      </span>
-                      <span>Generation:
-                        <span>{generation.find((item2) => item2.value === item.generation).label}</span>
-                      </span>
-                      <span>Star:
-                        <span>{star.find((item2) => item2.value === item.star).label}</span>
-                      </span>
-                    </div>
-                    <button onClick={() => {
-                      setToggle2(true);
-                      setModalData({
-                        ...modalData,
-                        heroClass: heroClass.find((item2) => item2.value === item.class).label,
-                        sex: sex.find((item2) => item2.value === item.sex).label,
-                        generation: generation.find((item2) => item2.value === item.generation).label,
-                        star: star.find((item2) => item2.value === item.star).label
-                      })
-                    }} className="btn--details">Details</button>
-                    <button onClick={() => {
-                      setToggle(!toggle);
-                      setTransferData(item);
-                    }}>Transfer</button>
-                  </li>
-                );
-              })
+            : (allHeroes.map((item, index) => 
+            <CardItem 
+              key={index} 
+              item={item} 
+              setTransferDataCb={setTransferDataCb} 
+              setModalDataCb={setModalDataCb}
+              setToggleCb={setToggleCb}
+              setToggle2Cb={setToggle2Cb}
+            />)
             ))}
           </ul>
         </div>
