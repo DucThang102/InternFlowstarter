@@ -65,14 +65,14 @@ function App() {
   return (
     <>
       <Box
-        sx={{ maxWidth: "1440px", m: "0 auto", px: { xs: 2, sm: 3, md: 5 } }}
+        sx={{ maxWidth: "1440px", m: "0 auto", px: { xs: 1.5, sm: 3, md: 5 } }}
       >
         <Header currentAcc={account} onConnect={connectWallet} />
         <Grid container spacing={4}>
-          <Grid item xs={12} sm={2.5}>
+          <Grid item xs={12} sm={3} md={2.5}>
             <Sidebar signer={signer} getHeroOfAccount={getHeroOfAccount} />
           </Grid>
-          <Grid item xs={12} sm={9.5}>
+          <Grid item xs={12} sm={9} md={9.5}>
             <Stack columnGap={2} direction="row">
               <Button
                 onClick={getHeroOfAccount}

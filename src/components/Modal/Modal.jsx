@@ -12,6 +12,7 @@ export default function AlertDialog({ show, onClose, onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(value);
+    setValue("");
     onClose();
   };
 
@@ -36,6 +37,7 @@ export default function AlertDialog({ show, onClose, onSubmit }) {
               variant="filled"
               value={value}
               fullWidth
+              inputRef={(input) => input && input.focus()}
               onChange={(e) => setValue(e.target.value)}
             />
           </DialogContent>

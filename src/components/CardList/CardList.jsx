@@ -36,7 +36,7 @@ function CardList({ data = [], currentAcc, signer, getHeroOfAccount }) {
     <>
       <Grid container spacing={2}>
         {data.map((item) => (
-          <Grid key={item.id} item xs={12} sm={6} md={3}>
+          <Grid key={item.id} item xs={6} sm={4} lg={3}>
             <Card
               item={item}
               onOpen={() => setShowModal(true)}
