@@ -104,9 +104,14 @@
                 </div>
               </v-col>
               <!-- =================all=================== -->
-              <v-alert type="success" v-if="isStatus"
-                >Create Hero success</v-alert
-              >
+              <v-alert type="success" v-if="isSuccess">{{ successMes}}</v-alert>
+              <v-alert type="error" v-if="isError">{{ errorMes }}</v-alert>
+              <div class="mx-auto d-flex justify-center" v-if="isLoading">
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                ></v-progress-circular>
+              </div>
               <v-col cols="12">
                 <div class="">
                   <div class="d-flex flex-wrap">
@@ -126,12 +131,6 @@
                         @onIdSelect="changeSelectedHero"
                       />
                     </div>
-                  </div>
-                  <div class="mx-auto d-flex justify-center" v-if="isLoading">
-                    <v-progress-circular
-                      indeterminate
-                      color="primary"
-                    ></v-progress-circular>
                   </div>
                 </div>
               </v-col>
@@ -193,12 +192,15 @@ export default {
       isLoading: false,
       redirectTab: true,
       signer: null,
-      isStatus: false,
+      isSuccess: false,
+      isError: false,
       addressWallet: "",
       dialog: false,
       inputAdressWallet: "",
       idSelect: null,
       address: "0x7575c71C24091954d219d59E3513b59f8F8a552f",
+      successMes: "",
+      errorMes: "",
       sex: [
         { label: "Male", value: 0 },
         { label: "Female", value: 1 },
@@ -274,7 +276,7 @@ export default {
     },
     async createHero() {
       try {
-        this.isLoading = true
+        this.isLoading = true;
         const provider = new ethers.providers.Web3Provider(
           window.ethereum,
           "any"
@@ -299,19 +301,24 @@ export default {
         );
         const { status } = await createHero.wait();
         if (status == 1) {
+          this.successMes = "Create hero success";
+          await setTimeout((this.isSuccess = true), 2000);
+          this.isLoading = false;
+          this.isSuccess = false;
           this.getHeroesOfAccount();
-          this.isStatus = true;
-          this.isLoading = false
-
+        } else {
+          this.errorMes = "Create error";
+          await setTimeout((this.isError = true), 2000);
+          this.isError = false;
         }
-        this.isStatus = false;
       } catch (error) {
+        this.errorMes = "Create error";
         console.log("Error uploading file: ", error);
       }
     },
     async handleTranfer() {
       this.dialog = false;
-      this.isLoading = true
+      this.isLoading = true;
       if (this.inputAdressWallet !== "") {
         const provider = new ethers.providers.Web3Provider(
           window.ethereum,
@@ -331,11 +338,22 @@ export default {
         );
         const { status } = await tranfer.wait();
         if (status == 1) {
-          this.isLoading = false
           this.getHeroesOfAccount();
+          this.successMes = "Transfer hero success";
+          await ((this.isSuccess = true), 2000);
+          this.isLoading = false;
+        } else {
+          this.errorMes = "Tranfer fail";
+          await ((this.isError = true), 2000);
+          this.isError = false;
         }
+      } else if (this.inputAdressWallet == 0) {
+        this.isLoading = false
+        console.log("ua");
+        this.errorMes = "address wallet invalid";
+        await ((this.isError = true), 2000);
+        this.isError = false;
       }
-      return;
     },
     changeSelectedHero(id) {
       this.idSelect = id;
