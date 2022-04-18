@@ -14,6 +14,12 @@ const init = async (
     if (!ethereum) {
         throw new Error("Please install MetaMask!");
     }
+    const net_version = await ethereum.request({ method: "net_version" });
+    if (parseInt(net_version) !== configs.PROVIDER_NETWORK) {
+        throw new Error(
+            `You can change network to ${configs.BLOCKCHAIN_NETWORK}`
+        );
+    }
     // const web3Modal = new Web3Modal();
     // const connection = await web3Modal.connect();
     // const provider = new ethers.providers.Web3Provider(connection);
@@ -22,6 +28,19 @@ const init = async (
     return contract;
 };
 
+const initRPC = (address: string, abi: AbiType) => {
+    const provider = new ethers.providers.JsonRpcProvider(
+        configs.PROVIDER_URL,
+        configs.PROVIDER_NETWORK
+    );
+    const ct = new ethers.Contract(address, abi, provider);
+    return ct;
+};
+
 export const HeroFiCT = async (signer: ethers.providers.JsonRpcSigner) => {
     return await init(configs.HEROES_ADDRESS, HEROFI.abi, signer);
+};
+
+export const HeroFiCT_RPC = () => {
+    return initRPC(configs.HEROES_ADDRESS, HEROFI.abi);
 };

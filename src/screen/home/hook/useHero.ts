@@ -17,16 +17,18 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
     const [itemTransfer, setItemTransfer] = useState<Heroes>();
     const getAllHeroes = useCallback(async () => {
         try {
-            if (signer) {
+            if (filter === "all-heroes") {
                 setLoading("Loading...");
-                if (filter === "all-heroes") {
-                    const res = await API.ethers.herofi.getAllHeroes(signer);
-                    setHeroes(res);
-                } else {
+                const res = await API.ethers.herofi.getAllHeroes();
+                setHeroes(res);
+            } else {
+                if (signer) {
                     const res = await API.ethers.herofi.getHeroesOfAccount(
                         signer
                     );
                     setHeroes(res);
+                } else {
+                    setHeroes([]);
                 }
             }
         } catch (e) {

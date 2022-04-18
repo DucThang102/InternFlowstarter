@@ -7,7 +7,10 @@ const useAccount = () => {
     const [signer, setSigner] = useState<ethers.providers.JsonRpcSigner>();
 
     const [account, setAccount] = useState("");
+
     const getSigner = useCallback(async () => {
+        console.log("aaaaa");
+
         try {
             const ethereum = window.ethereum;
             if (!ethereum) {

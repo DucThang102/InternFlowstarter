@@ -1,9 +1,10 @@
 import { BigNumber, ethers } from "ethers";
-import { HeroFiCT } from "../config";
+import { HeroFiCT, HeroFiCT_RPC } from "../config";
 
 class HeroFiAPI {
-    public getAllHeroes = async (signer: ethers.providers.JsonRpcSigner) => {
-        const HeroFi = await HeroFiCT(signer);
+    public getAllHeroes = async () => {
+        // const HeroFi = await HeroFiCT(signer);
+        const HeroFi = HeroFiCT_RPC();
         return HeroFi.getAllHeroes();
     };
     public getHeroesOfAccount = async (
