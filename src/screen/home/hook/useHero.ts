@@ -16,31 +16,46 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
     const [showTransfer, setShowTransfer] = useState(false);
     const [itemTransfer, setItemTransfer] = useState<Heroes>();
     const getAllHeroes = useCallback(async () => {
-        try {
-            if (filter === "all-heroes") {
+        if (filter === "all-heroes") {
+            try {
                 setLoading("Loading...");
                 const res = await API.ethers.herofi.getAllHeroes();
                 setHeroes(res);
-            } else {
-                if (signer) {
+            } catch (e) {
+                errorContract(e);
+            } finally {
+                setLoading("");
+            }
+        }
+    }, [filter]);
+
+    const getHeroesOfAccount = useCallback(async () => {
+        if (filter === "my-heroes") {
+            if (signer) {
+                try {
+                    setLoading("Loading...");
                     const res = await API.ethers.herofi.getHeroesOfAccount(
                         signer
                     );
                     setHeroes(res);
-                } else {
-                    setHeroes([]);
+                } catch (e) {
+                    errorContract(e);
+                } finally {
+                    setLoading("");
                 }
+            } else {
+                setHeroes([]);
             }
-        } catch (e) {
-            errorContract(e);
-        } finally {
-            setLoading("");
         }
     }, [filter, signer]);
 
     useEffect(() => {
         getAllHeroes();
     }, [getAllHeroes]);
+
+    useEffect(() => {
+        getHeroesOfAccount();
+    }, [getHeroesOfAccount]);
 
     const createHero = useCallback(
         async (data: CreateHero) => {
