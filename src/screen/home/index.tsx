@@ -86,7 +86,7 @@ const Index = () => {
                             />
                         ))}
                     </div>
-                    <div className="flex justify-center mt-10 mb-10">
+                    <div className="flex justify-center mt-10 pb-10">
                         <Pagination
                             className="_ant-pagination"
                             showSizeChanger

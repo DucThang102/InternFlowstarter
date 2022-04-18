@@ -435,9 +435,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mt-10 {
   margin-top: 2.5rem;
 }
-.mb-10 {
-  margin-bottom: 2.5rem;
-}
 .mt-3 {
   margin-top: 0.75rem;
 }
@@ -527,6 +524,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .pl-5 {
   padding-left: 1.25rem;
+}
+.pb-10 {
+  padding-bottom: 2.5rem;
 }
 .pt-10 {
   padding-top: 2.5rem;
