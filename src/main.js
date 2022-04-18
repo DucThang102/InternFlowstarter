@@ -17,11 +17,23 @@ const FormSizeDemo = () => {
     const [contracts, setcontracts] = useState([]);
     const [fileUrl, updateFileUrl] = useState('')
     const [loading, setLoading] = useState(false);
-    const [hidden, setHidden] = useState(false)
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const contract = new ethers.Contract(process.env.REACT_APP_API_CONTRACT, herofi?.abi, provider);
-    const signer = provider.getSigner()
+    const [hidden, setHidden] = useState(false);
+    let provider, contract, signer;
+    if(typeof window.ethereum !== 'undefined'){
+        provider = new ethers.providers.Web3Provider(window.ethereum);
+        contract = new ethers.Contract(process.env.REACT_APP_API_CONTRACT, herofi?.abi, provider);   
+        signer = provider.getSigner();
+    }
+    else{
+        toast.error('Not exist Metamask');
+        window.open(process.env.REACT_APP_URL_INSTALL_METAMASK, '_blank')
+    }
+    
+    // const signer = provider.getSigner();
+    // const contract = new ethers.Contract(process.env.REACT_APP_API_CONTRACT, herofi?.abi, provider);
+    // const contractSigner = new ethers.Contract(process.env.REACT_APP_API_CONTRACT, herofi?.abi, signer);
     const contractSigner = new ethers.Contract(process.env.REACT_APP_API_CONTRACT, herofi?.abi, signer);
+
     async function onChange(e) {
         const file = e.target.files[0]
         try {
@@ -29,16 +41,20 @@ const FormSizeDemo = () => {
           const url = `https://ipfs.infura.io/ipfs/${added.path}`
           updateFileUrl(url)
         } catch (error) {
-          console.log('Error uploading file: ', error)
+        //   console.log('Error uploading file: ', error)
+            toast.error('Error uploading file')
         }  
     }
 
-    const getAddressMetamask = async () => {
+    const getHeroFiMetamask = async () => {
         try{
-            const signer = provider.getSigner();
-            setAddress(await signer.getAddress());
+            setLoading(true)
+            const cHerifi = await contract?.getAllHeroes()
+            setcontracts(await cHerifi)
+            // setLoading(false)
         }
         catch(err){
+            // setLoading(false)
             if(err.message){
                 toast.error(err.message.toString().substring(0, 30) + "...")
             }
@@ -46,16 +62,16 @@ const FormSizeDemo = () => {
                 toast.error(somethingError)
             }
         }
+        finally{setLoading(false)}
     }
-    const getHeroFiMetamask = async () => {
+
+    const getAddressMetamask = async () => {
         try{
-        setLoading(true)
-        const cHerifi = await contract?.getAllHeroes()
-        setcontracts(await cHerifi)
-        setLoading(false)
+            // const signer = provider.getSigner();
+            setAddress(await signer.getAddress());
+            sessionStorage.setItem('isMetamask', await signer.getAddress())
         }
         catch(err){
-            setLoading(false)
             if(err.message){
                 toast.error(err.message.toString().substring(0, 30) + "...")
             }
@@ -123,8 +139,13 @@ const FormSizeDemo = () => {
     }
 
     useEffect(() => {
-        getAddressMetamask();
-        getHeroFiMetamask();
+        if(typeof window.ethereum !== 'undefined'){
+            getHeroFiMetamask();
+            getAddressMetamask();
+        }
+        if(!sessionStorage.getItem('isMetamask')){
+            toast.warning('You need reload page and you must logged in')
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return (
