@@ -12,11 +12,14 @@ body {
 }
 button {
     padding: 5px 10px;
-    border: none;
+    border: 1px solid #679f38;
     border-radius: 5px;
     cursor: pointer;
     background-color: #679f38;
     color: #fff;
+}
+button:hover {
+    text-decoration: underline;
 }
 input {
     border: 1px solid #8d8d8d;

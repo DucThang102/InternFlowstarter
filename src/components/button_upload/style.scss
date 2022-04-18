@@ -1,38 +1,73 @@
-._label-btn-upload {
+@keyframes loading-icon-upload {
+    0% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(90deg);
+    }
+    50% {
+        transform: rotate(180deg);
+    }
+    75% {
+        transform: rotate(270deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+._btn-upload {
     width: 100px;
     height: 100px;
-    display: block;
-    overflow: hidden;
-    border-radius: 2px;
-    border: 1px dashed #888888;
-    margin-top: 0;
-    cursor: pointer;
-    .img {
+    position: relative;
+    ._loading {
+        position: absolute;
         width: 100%;
         height: 100%;
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-    }
-    .btn-upload {
+        top: 0;
+        left: 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: column;
+        svg {
+            animation: loading-icon-upload 0.5s ease infinite;
+        }
+    }
+    ._label-btn-upload {
         width: 100%;
         height: 100%;
-        color: #888888;
-    }
-    input {
-        display: none;
-    }
-
-    &:hover {
-        border-color: #ff6600;
+        display: block;
+        overflow: hidden;
+        border-radius: 2px;
+        border: 1px dashed #888888;
+        margin-top: 0;
+        cursor: pointer;
+        .img {
+            width: 100%;
+            height: 100%;
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
         .btn-upload {
-            color: #ff6600;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            color: #888888;
+        }
+        input {
+            display: none;
+        }
+
+        &:hover {
+            border-color: #ff6600;
+            .btn-upload {
+                color: #ff6600;
+            }
         }
     }
 }

@@ -10,11 +10,24 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         "" | "Loading..." | "Creating..." | "Transferring..."
     >("");
     const [heroes, setHeroes] = useState<Heroes[]>([]);
+    const [heroeShow, setHeroesShow] = useState<Heroes[]>([]);
     const [filter, setFilter] = useState<"all-heroes" | "my-heroes">(
         "all-heroes"
     );
     const [showTransfer, setShowTransfer] = useState(false);
     const [itemTransfer, setItemTransfer] = useState<Heroes>();
+
+    const [pagination, setPagination] = useState({
+        page: 1,
+        limit: 8,
+    });
+
+    useEffect(() => {
+        const start = (pagination.page - 1) * pagination.limit;
+        const end = pagination.page * pagination.limit;
+
+        setHeroesShow(heroes.slice(start, end));
+    }, [heroes, pagination.limit, pagination.page]);
     const getAllHeroes = useCallback(async () => {
         if (filter === "all-heroes") {
             try {
@@ -130,8 +143,10 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         },
         [filter, itemTransfer, signer]
     );
+    console.log("pppp", pagination);
 
     return {
+        heroeShow,
         heroes,
         setFilter,
         createHero,
@@ -141,6 +156,8 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         showTransfer,
         setShowTransfer,
         transfer,
+        setPagination,
+        pagination,
     };
 };
 export default useHero;

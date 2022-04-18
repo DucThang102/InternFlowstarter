@@ -1,11 +1,12 @@
-import { Select } from "antd";
+import { Select, Form } from "antd";
 import { generation, heroClass, star, sex } from ".";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import React, { useState } from "react";
 import { CreateHero } from "../../api/ethers/repo/HeroFi";
 import configs from "../../config/const";
-import notify from "../../components/notify";
+// import notify from "../../components/notify";
 import ButtonUpload from "../../components/button_upload";
+import { IPFSError } from "../../utils/errorContract";
 const client = ipfsHttpClient({ url: configs.IPFS_URL });
 const { Option } = Select;
 
@@ -15,121 +16,129 @@ type SiderProps = {
 };
 
 const Sider = ({ createHero, account }: SiderProps) => {
-    const [file, setFile] = useState<any>(null);
-    const [generationValue, setGenerationValue] = useState<number>();
-    const [classValue, setClassValue] = useState<number>();
-    const [starValue, setStarValue] = useState<number>();
-    const [sexValue, setSexValue] = useState<number>();
-    const [uploading, setUploading] = useState(false);
+    const [avatar, setAvatar] = useState("");
+    const [valiAvatar, setValiAvatar] = useState(false);
 
-    const createIPFS = async () => {
+    const createIPFS = async (file: any) => {
         try {
-            setUploading(true);
-            const added = await client.add(file[0]);
-            return `${configs.IPFS_BASE}/${added.path}`;
-        } catch {
-            notify.error("Upload file không thành công");
-        } finally {
-            setUploading(false);
+            const added = await client.add(file);
+            const str = `${configs.IPFS_BASE}/${added.path}`;
+            setAvatar(str);
+            setValiAvatar(!str);
+            return true;
+        } catch (e) {
+            IPFSError(e);
+            return false;
         }
     };
 
-    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (
-            file &&
-            typeof generationValue !== "undefined" &&
-            typeof classValue !== "undefined" &&
-            typeof starValue !== "undefined" &&
-            typeof sexValue !== "undefined"
-        ) {
-            const avatar = await createIPFS();
-            if (!avatar) return;
+    const onFinish = (values: {
+        class: number;
+        generation: number;
+        sex: number;
+        star: number;
+    }) => {
+        if (avatar) {
             createHero(
                 new CreateHero(
                     avatar,
-                    classValue,
-                    sexValue,
-                    generationValue,
-                    starValue
+                    values.class,
+                    values.sex,
+                    values.generation,
+                    values.star
                 )
             );
-        } else {
-            notify.error("Không được để trống dữ liệu");
         }
     };
     return (
         <div className="_sider flex flex-col pt-10 px-5 relative">
-            <form onSubmit={onSubmit} className="w-full overflow-hidden">
+            <Form onFinish={onFinish}>
                 <p>Avatar</p>
-                {/* <label>
-                    <input
-                        className="w-full"
-                        onChange={(e) => setFile(e.target.files)}
-                        type="file"
-                    />
-                </label> */}
-                <ButtonUpload onChange={(e) => setFile(e.target.files)} />
+                <ButtonUpload onChange={createIPFS} />
+                <div className="h-7 text-red-500">
+                    {valiAvatar && "Avatar không được để trống"}
+                </div>
                 <label htmlFor="class">Class</label>
-                <Select
-                    onChange={(value) => setClassValue(value)}
-                    id="class"
-                    placeholder="Class"
-                    className="w-full"
+                <Form.Item
+                    name="class"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Class không được để trống",
+                        },
+                    ]}
                 >
-                    {heroClass.map((c, i) => (
-                        <Option value={c.value} key={i}>
-                            {c.label}
-                        </Option>
-                    ))}
-                </Select>
+                    <Select id="class" placeholder="Class" className="w-full">
+                        {heroClass.map((c, i) => (
+                            <Option value={c.value} key={i}>
+                                {c.label}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>{" "}
                 <label htmlFor="sex">Sex</label>
-                <Select
-                    onChange={(value) => setSexValue(value)}
-                    id="sex"
-                    placeholder="Sex"
-                    className="w-full"
+                <Form.Item
+                    name="sex"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Giới tính không được để trống",
+                        },
+                    ]}
                 >
-                    {sex.map((c, i) => (
-                        <Option value={c.value} key={i}>
-                            {c.label}
-                        </Option>
-                    ))}
-                </Select>
+                    <Select id="sex" placeholder="Sex" className="w-full">
+                        {sex.map((c, i) => (
+                            <Option value={c.value} key={i}>
+                                {c.label}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>{" "}
                 <label htmlFor="generation">Generation</label>
-                <Select
-                    onChange={(value) => setGenerationValue(value)}
-                    id="generation"
-                    placeholder="Seneration"
-                    className="w-full"
+                <Form.Item
+                    name="generation"
+                    rules={[
+                        {
+                            required: true,
+                            message: "Generation không được để trống",
+                        },
+                    ]}
                 >
-                    {generation.map((c, i) => (
-                        <Option value={c.value} key={i}>
-                            {c.label}
-                        </Option>
-                    ))}
-                </Select>
+                    <Select
+                        id="generation"
+                        placeholder="Seneration"
+                        className="w-full"
+                    >
+                        {generation.map((c, i) => (
+                            <Option value={c.value} key={i}>
+                                {c.label}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
                 <label htmlFor="star">Star</label>
-                <Select
-                    onChange={(value) => setStarValue(value)}
-                    id="star"
-                    placeholder="Star"
-                    className="w-full"
+                <Form.Item
+                    name="star"
+                    rules={[
+                        { required: true, message: "Star không được để trống" },
+                    ]}
                 >
-                    {star.map((c, i) => (
-                        <Option value={c.value} key={i}>
-                            {c.label}
-                        </Option>
-                    ))}
-                </Select>
+                    <Select id="star" placeholder="Star" className="w-full">
+                        {star.map((c, i) => (
+                            <Option value={c.value} key={i}>
+                                {c.label}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
                 {account && (
                     <div className="mt-5">
-                        <button>Create Hero</button>
+                        <button onClick={() => setValiAvatar(!avatar)}>
+                            Create Hero
+                        </button>
                     </div>
                 )}
-            </form>
-            {uploading && <div className="_uploading">Uploading image</div>}
+            </Form>
         </div>
     );
 };

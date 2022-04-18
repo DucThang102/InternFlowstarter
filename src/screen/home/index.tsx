@@ -7,6 +7,7 @@ import "./style.scss";
 import Model from "../../components/model";
 import Form from "./Form";
 import { FiLoader } from "react-icons/fi";
+import { Pagination } from "antd";
 
 export const sex = [
     { label: "Male", value: 0 },
@@ -36,7 +37,10 @@ export const star = [
 const Index = () => {
     const { account, signer, getSigner } = useAccount();
     const {
+        heroeShow,
+        setPagination,
         heroes,
+        pagination,
         setFilter,
         createHero,
         loading,
@@ -55,17 +59,24 @@ const Index = () => {
                 <div className="flex flex-col w-full p-10 h-full overflow-auto _items">
                     <div className="flex flex-row _item-max-width pl-5">
                         <button
-                            className="mr-5"
+                            className={`mr-5${
+                                filter !== "all-heroes" ? " _not-active" : ""
+                            }`}
                             onClick={() => setFilter("all-heroes")}
                         >
                             All Heroes
                         </button>
-                        <button onClick={() => setFilter("my-heroes")}>
+                        <button
+                            className={`${
+                                filter !== "my-heroes" ? " _not-active" : ""
+                            }`}
+                            onClick={() => setFilter("my-heroes")}
+                        >
                             My Heroes
                         </button>
                     </div>
                     <div className="flex flex-wrap _item-max-width">
-                        {heroes.map((hero, i) => (
+                        {heroeShow.map((hero, i) => (
                             <Item
                                 setItemTransfer={setItemTransfer}
                                 setShowTransfer={setShowTransfer}
@@ -74,6 +85,23 @@ const Index = () => {
                                 hero={hero}
                             />
                         ))}
+                    </div>
+                    <div className="flex justify-center mt-10 mb-10">
+                        <Pagination
+                            className="_ant-pagination"
+                            showSizeChanger
+                            defaultCurrent={pagination.page}
+                            pageSize={pagination.limit}
+                            current={pagination.page}
+                            total={heroes.length}
+                            pageSizeOptions={[8, 16, 32, 64, 100]}
+                            onChange={(page, limit) =>
+                                setPagination({ page, limit })
+                            }
+                            showTotal={(total, range) => (
+                                <div>{`${range[0]}-${range[1]} of ${total} items`}</div>
+                            )}
+                        />
                     </div>
                 </div>
             </div>
@@ -125,7 +153,7 @@ const Item = ({
                             setItemTransfer(hero);
                         }}
                     >
-                        Tranfer
+                        Transfer
                     </button>
                 </div>
             )}
