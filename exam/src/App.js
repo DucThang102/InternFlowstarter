@@ -38,7 +38,7 @@ function App() {
   let contract
   let signer
   let contractSigner
-  
+
   if (typeof window.ethereum !== 'undefined') {
     provider = new ethers.providers.Web3Provider(window.ethereum)
     contract = new ethers.Contract(ADDRESS, heroAbi.abi, provider)
@@ -47,8 +47,10 @@ function App() {
   }
 
   useEffect(() => {
-    getAddressMetamask()
-    getAllHeroesContract()
+    if(typeof window.ethereum !== 'undefined'){
+      getAddressMetamask()
+      getAllHeroesContract()
+    }
   }, [])
 
   useEffect(() => {
