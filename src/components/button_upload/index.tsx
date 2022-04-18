@@ -1,11 +1,10 @@
 import { useState } from "react";
-import utils from "../../utils";
-import "./style.scss";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import notify from "../notify";
+import "./style.scss";
 type ButtonUploadprops = {
     className?: string;
     onChange: (file: any) => Promise<boolean>;
+    beforeUpload?: (file: any) => boolean;
 };
 function getBase64(file: any) {
     return new Promise((resolve, reject) => {
@@ -19,27 +18,25 @@ const ButtonUpload = (props: ButtonUploadprops) => {
     const [image, setImage] = useState("");
     const [uploading, setUploading] = useState(false);
 
-    const { onChange, className } = props;
+    const { onChange, className, beforeUpload } = props;
 
     const onChangeinput = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const files: any = e.target.files;
-        console.log(files[0]);
-        if (!utils.validateImageUpload(files[0])) {
-            notify.error("Chỉ cho phép upload file JPG và PNG");
+        if (typeof beforeUpload !== "undefined" && !beforeUpload(files[0]))
             return;
-        }
-        if (!utils.validateImageSize(files[0])) {
-            notify.error("Dung lượng file quá lớn");
-            return;
-        }
-        setUploading(true);
 
+        setUploading(true);
         const change = await onChange(files[0]);
         if (change) {
             const baseCode = await getBase64(files[0]);
             setImage(baseCode as string);
         }
         setUploading(false);
+    };
+
+    const clear = () => {
+        onChange(undefined);
+        setImage("");
     };
     return (
         <div className={"_btn-upload" + (className ? ` ${className}` : "")}>
@@ -60,6 +57,11 @@ const ButtonUpload = (props: ButtonUploadprops) => {
                     </div>
                 )}
             </label>
+            {image && (
+                <div onClick={clear} className="_clear">
+                    x
+                </div>
+            )}
             {uploading && (
                 <div className="_loading">
                     <AiOutlineLoading3Quarters />

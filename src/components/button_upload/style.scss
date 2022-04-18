@@ -19,6 +19,19 @@
     width: 100px;
     height: 100px;
     position: relative;
+    ._clear {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        right: 0;
+        background: #e8e8e846;
+        padding: 0 5px;
+        cursor: pointer;
+        &:hover {
+            background-color: #888888;
+            color: white;
+        }
+    }
     ._loading {
         position: absolute;
         width: 100%;
