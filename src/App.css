@@ -5,49 +5,8 @@
   align-items: flex-start;
 }
 
-.form, .container {
+.container {
   padding: 30px;
-}
-
-.form {
-  width: 20%;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-/* Upload image style */
-::-webkit-file-upload-button {
-  outline: none;
-  display: block;
-  padding: 6px 14px;
-  margin: 0 10px 10px 0;
-  border: 1px solid rgba(0,0,0,0.3);
-  background-color: #fff;
-  cursor: pointer;
-}
-
-::-webkit-file-upload-button:hover {
-  background-color: rgba(0,0,0,0.08);
-}
-
-.form-group input, .form-group select {
-  display: block;
-  margin-top: 8px;
-}
-
-.form-group label {
-  display: block;
-  width: 50%;
-}
-
-.form-group select {
-  outline: none;
-  width: 120px;
-  padding: 6px 8px;
-  border: 1px solid rgba(0,0,0,0.3);
-  cursor: pointer;
 }
 
 .btn {
@@ -57,6 +16,8 @@
   background-color: rgb(4, 209, 4);
   color: #fff;
   font-size: 15px;
+  border: 1px solid transparent;
+  border-radius: 3px;
   cursor: pointer;
   transition: all .3s;
   box-shadow: 0 0 15px rgba(0,0,0,0.2);
@@ -67,15 +28,10 @@
 }
 
 .btn--myheroes {
-  margin-left: 10px;
+  margin-left: 15px;
 }
 
 .btn--myheroes:disabled {
-  background-color: #6c757d;
-  cursor: default;
-}
-
-.btn--createheroes:disabled {
   background-color: #6c757d;
   cursor: default;
 }
@@ -93,7 +49,7 @@
 .container-top a {
   text-decoration: underline;
   font-size: 17px;
-  color: red;
+  color: #dc3545;
 }
 
 .container-top a:hover {
@@ -105,6 +61,21 @@
   font-size: 17px;
 }
 
+.container-count {
+  padding-top: 16px;
+  font-size: 17px;
+  width: 100%;
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.container-count > div {
+  padding-right: 22px;
+  margin-right: 22px;
+  border-right: 1px solid rgba(0,0,0,0.2);
+}
+
 .container-list {
   display: flex;
   flex-wrap: wrap;
@@ -112,6 +83,50 @@
   list-style: none;
   padding-left: 0;
   margin: 20px 0 0 -20px;
+}
+
+.container-err-message {
+  display: block;
+  width: 100%;
+  text-align: center;
+  color: #dc3545;
+  font-size: 17px;
+  margin-top: 14px;
+}
+
+.container-page-list {
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.container-page-item {
+  outline: none;
+  padding: 5px 10px;
+  margin: 12px 12px 0 0;
+  border: 1px solid rgba(0,0,0,0.2);
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.container-page-item.active {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.container-page-item:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.container-page-item:disabled {
+  background-color: #919ba3;
+  color: #fff;
+  cursor: default;
 }
 
 .detail-modal, .transfer-modal {
@@ -176,6 +191,8 @@
   transform: translate(-50%,  -50%);
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  border-radius: 8px;
+  overflow: hidden;
   transition: all .6s;
   z-index: 9999;
 }
@@ -206,78 +223,27 @@
   margin-top: 10px;
 }
 
-.transfer-button {
-  border: none;
-  outline: none;
-  padding: 6px 12px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: all .3s;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
-
-.transfer-button--transfer {
+.btn--transfer {
   margin-right: 12px;
   background-color: rgb(4, 209, 4);
   color: #fff;
 }
 
-.transfer-button--transfer:hover {
-  background-color: rgb(3, 156, 3);
-}
 
-.transfer-button--cancel {
+.btn--cancel {
   border: 1px solid #dc3545;
   background-color: #fff;
+  color: #000;
 }
 
-.transfer-button--cancel:hover {
+.btn--cancel:hover {
   color: #fff;
   background-color: #dc3545;
 }
 
-@media screen and (max-width: 1023px) {
-  .form {
-    padding-right: 10px;
-  }
-}
-
 @media screen and (max-width: 859px) {
-  .form {
-    width: 25%;
-  }
-
   .container-list {
     margin-left: -10px;
-  }
-}
-
-@media screen and (max-width: 767px) {
-  .form {
-    width: 30%;
-  }
-}
-
-@media screen and (max-width: 559px) {
-  .App {
-    flex-direction: column;
-  }
-
-  .form, .container {
-    width: 100%;
-  }
-
-  .form-group select {
-    width: 40%;
-  }
-
-  .form {
-    padding-bottom: 10px;
-  }
-
-  .container {
-    padding-top: 10px;
-    border-top: 1px solid rgba(0,0,0,0.2);
   }
 
   .container-top {
@@ -287,13 +253,23 @@
 
   .container-top a, .container-top-address {
     display: block;
-    margin-top: 10px;
+    margin-top: 16px;
     word-break: break-word;
+  }
+
+  .container-err-message {
+    font-size: 18px;
   }
 }
 
-@media screen and (max-width: 479px) {
-  .form-group select {
-    width: 50%;
+@media screen and (max-width: 559px) {
+  .App {
+    flex-direction: column;
+  }
+
+  .container {
+    width: 100%;
+    padding-top: 30px;
+    border-top: 1px solid rgba(0,0,0,0.2);
   }
 }

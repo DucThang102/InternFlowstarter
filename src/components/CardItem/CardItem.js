@@ -4,7 +4,7 @@ import { sex, generation, heroClass, star } from "../../constants";
 export default function CardItem ({item, setTransferDataCb, setModalDataCb, setToggleCb, setToggle2Cb}) {
     return (
         <li className="container-item">
-            <img src={item.avatar} alt={`img ${item.avatar}`} />
+            <img src={item.avatar} alt='img' />
             <div className="container-item-data">
                 <span>Class:
                     <span>{heroClass.find((item2) => item2.value === item.class).label}</span>
@@ -22,11 +22,11 @@ export default function CardItem ({item, setTransferDataCb, setModalDataCb, setT
             <button onClick={() => {
                 setToggle2Cb();
                 setModalDataCb(item);
-            }} className="btn--details">Details</button>
+            }} className="btn btn--details">Details</button>
             <button onClick={() => {
                 setToggleCb();
                 setTransferDataCb(item);
-            }}>Transfer</button>
+            }} className="btn btn--infotransfer">Transfer</button>
         </li>
     );
 }

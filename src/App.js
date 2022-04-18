@@ -1,12 +1,13 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import "./App.css";
 import Loading from './components/Loading/Loading';
 import CardItem from "./components/CardItem/CardItem";
+import HeroesForm from "./components/HeroesForm/HeroesForm";
 
-import { create } from "ipfs-http-client";
 import { ethers } from "ethers";
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+import { successToast, errToast, warnToast } from './utils/ToastMessage';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { data } from "./HeroFi";
@@ -15,13 +16,6 @@ import { address, sex, generation, heroClass, star } from "./constants";
 function App() {
   const [addressAccount, setAddressAccount] = useState("");
   const [allHeroes, setAllHeroes] = useState([]);
-  const [dataInput, setDataInput] = useState({
-    avatar: "",
-    heroClass: "0",
-    sex: "0",
-    generation: "0",
-    star: "0"
-  });
 
   /* Mobile Detail Modal */
   const [modalData, setModalData] = useState({
@@ -40,36 +34,24 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [toggle2, setToggle2] = useState(false);
+  const [tabIndex, setTabIndex] = useState(1);
+  const [pageIndex, setPageIndex] = useState(1);
   const [disabled, setDisabled] = useState(true);
+
+  let pageNum = 20;
 
   /* Input ref */
   const inputRef = useRef();
-
-  /* Create ipfs Image */
-  const client = create("https://ipfs.infura.io:5001/api/v0");
-
-  async function onChangeImage(e) {
-    const file = e.target.files[0];
-    try {
-      const added = await client.add(file);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setDataInput({
-        ...dataInput,
-        avatar: url,
-      });
-    } catch (error) {
-      toast(`Loi upload: ${error} !`);
-    }
-  }
 
   /* Connect MetaMask */
   const connectMetaMask = async () => {
     try {
       const account = await signer.getAddress();
       setAddressAccount(account);
-      toast("Ket noi MetaMask thanh cong !");
+      setDisabled(!disabled);
+      successToast("Ket noi MetaMask thanh cong !");
     } catch (error) {
-      toast("Ket noi MetaMask that bai !");
+      errToast("Ket noi MetaMask that bai !");
       throw error;
     }
   };
@@ -80,13 +62,14 @@ function App() {
       setLoading(true);
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
+      const signer = provider.getSigner();
       setSigner(signer);
       const contractRes = new ethers.Contract(address, data.abi, signer);
       setContract(contractRes);
       const heroRes = await contractRes.getAllHeroes();
       const heroResExecuted = heroRes.map(item => Object.assign({}, item));
       setAllHeroes([...heroResExecuted]);
+      setPageIndex(1);
       setLoading(false);
     } catch (error) {
       throw error;
@@ -99,6 +82,7 @@ function App() {
       setLoading(true);
       const heroAccountRes = await contract.getHeroesOfAccount();
       setAllHeroes([...heroAccountRes]);
+      setPageIndex(1);
       setLoading(false);
     } catch (error) {
       throw error;
@@ -106,24 +90,25 @@ function App() {
   };
 
   /* Create Hero method */
-  const createHero = async (e) => {
+  const createHero = async (e, dataInput) => {
     e.preventDefault();
     try {
       const { avatar, heroClass, sex, generation, star } = dataInput;
       if(avatar === "")
-        toast("Vui long chon anh !");
+        warnToast("Vui long chon anh !");
       else {
         const res = await contract.createHero(avatar, heroClass, sex, generation, star);
         const { status } = await res.wait();
         if(status === 1) {
           getAllHeroesAccount();
+          setPageIndex(1);
         }
         else {
-          toast("Tao hero that bai !");
+          errToast("Tao hero that bai !");
         }
       }
     } catch (error) {
-      toast("Tao hero that bai !");
+        errToast("Tao hero that bai !");
       throw error;
     }
   };
@@ -132,10 +117,10 @@ function App() {
   const transferHero = async (e) => {
     e.preventDefault();
     if(addressAccount === "")
-      toast("Hay ket noi voi MetaMask truoc !");
+      warnToast("Hay ket noi voi MetaMask truoc !");
     else {
       if(transferAccount === "") 
-        toast("Hay nhap tai khoan nhan !");
+        errToast("Hay nhap tai khoan nhan !");
       else {
         try {
           /* 0x46431225342257388cA3FD6248C0db14D055bb4c */
@@ -143,22 +128,23 @@ function App() {
           console.log("Transfer");
           const { status } = await res.wait();
           if(status === 1) {
-            toast("Chuyen doi thanh cong !");
+            successToast("Chuyen doi thanh cong !");
             setTransferAccount("");
             setToggle(false);
             getAllHeroesAccount();
           }
           else {
-            toast("Chuyen doi that bai !");
+            errToast("Chuyen doi that bai !");
           }
         } catch (error) {
-          toast("Chuyen doi that bai !");
+          errToast("Chuyen doi that bai !");
           throw error;
         }
       }
     }
   }
 
+  /* Card callback */
   const setTransferDataCb = (item) => {
     setTransferData(item);
   }
@@ -181,10 +167,32 @@ function App() {
     setToggle2(!toggle2)
   }
 
+  /* Pagination */
+  const page = useMemo(() => {
+    return Math.ceil(allHeroes.length / pageNum);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allHeroes]);
+
+  let pageTemplate = [];
+  for (let i = 1; i <= page; i++) 
+    pageTemplate.push(
+      <li className={pageIndex === i ? "container-page-item active" : "container-page-item"} 
+        onClick={() => {
+          setPageIndex(i); 
+          window.scrollTo({top: "0", behavior: "smooth"});
+        }}>{i}
+      </li>
+    );
+
   useEffect(() => {
     if (typeof window.ethereum !== "undefined") {
       console.log("MetaMask is installed!");
       getAllHeroes();
+      warnToast("Vui long hay ket noi MetaMask truoc !");
+    }
+    else {
+      errToast("Trinh duyet khong co MetaMask. Vui long tai ve !")
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -192,100 +200,66 @@ function App() {
 
   useEffect(() => {
     inputRef.current.focus();
-  }, [toggle])
+  }, [toggle]);
 
   return (
     <div className="App">
-      <ToastContainer position="top-center" autoClose={4000} pauseOnHover={false} />
+      <ToastContainer position="top-center" autoClose={3000} pauseOnHover={false} newestOnTop={true} />
 
-      <form className="form">
-        <div className="form-group">
-          <label htmlFor="avatar">Avatar:</label>
-          <input type="file" id="avatar" onChange={onChangeImage} />
-        </div>
-        <div className="form-group">
-          <label htmlFor="class">Class:</label>
-          <select id="class" onChange={(e) => setDataInput({ ...dataInput, heroClass: e.target.value })}>
-            {heroClass.map((item, index) => {
-              return (
-                <option key={index} value={item.value}>
-                  {item.label}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="sex">Sex:</label>
-          <select id="sex" onChange={(e) => setDataInput({ ...dataInput, sex: e.target.value })}>
-            {sex.map((item, index) => {
-              return (
-                <option key={index} value={item.value}>
-                  {item.label}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="generation">Generation:</label>
-          <select id="generation" onChange={(e) => setDataInput({ ...dataInput, generation: e.target.value })}>
-            {generation.map((item, index) => {
-              return (
-                <option key={index} value={item.value}>
-                  {item.label}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <div className="form-group">
-          <label htmlFor="star">Star:</label>
-          <select id="star" onChange={(e) => setDataInput({ ...dataInput, star: e.target.value })}>
-            {star.map((item, index) => {
-              return (
-                <option key={index} value={item.value}>
-                  {item.label}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-        <button type="submit" className="btn btn--createheroes" onClick={createHero} disabled={disabled}>Create Hero</button>
-      </form>
+      <HeroesForm createHero={createHero} disabled={disabled} />
 
       <div className="container">
         <div className="container-top">
           <div>
             {/* Get All Heroes */}
-            <button className="btn" onClick={getAllHeroes}>All Heroes</button>
+            <button className="btn" style={tabIndex === 1 ? {transform: 'scale(1.2)'} : {}} onClick={() => {
+              getAllHeroes(); 
+              setTabIndex(1);
+            }}>All Heroes</button>
             {/* Get All Heroes Of Account */}
-            <button className="btn btn--myheroes" onClick={getAllHeroesAccount} disabled={disabled}>My Heroes</button>
+            <button className="btn btn--myheroes" style={tabIndex === 2 ? {transform: 'scale(1.2)'} : {}} onClick={() => {
+              getAllHeroesAccount(); 
+              setTabIndex(2);
+            }} disabled={disabled}>My Heroes</button>
           </div>
           {addressAccount.length === 0 ? (
             <a href="/#" onClick={(event) => {
               connectMetaMask(event);
-              setDisabled(!disabled);
             }}>Connect MetaMask</a>
           ) : (
             <div className="container-top-address">{`Address: ${addressAccount}`}</div>
           )}
         </div>
         <div className="container-bottom">
-          <ul className="container-list">
-            {loading ? <Loading />
-            : (allHeroes.length === 0 ? "No Heroes" 
-            : (allHeroes.map((item, index) => 
-            <CardItem 
-              key={index} 
-              item={item} 
-              setTransferDataCb={setTransferDataCb} 
-              setModalDataCb={setModalDataCb}
-              setToggleCb={setToggleCb}
-              setToggle2Cb={setToggle2Cb}
-            />)
-            ))}
-          </ul>
+          <div className="container-count">
+            <div>Page: {pageIndex}</div>
+            Total Heroes: {allHeroes?.length}
+          </div> 
+          {typeof window.ethereum === "undefined" ? 
+            <div className="container-err-message">Get All Heroes failed!</div> : 
+            <>
+              <ul className="container-list">
+              {loading ? <Loading />
+              : (allHeroes.length !== 0 && (allHeroes.slice(pageNum * (pageIndex - 1), pageNum * pageIndex).map((item, index) => 
+                  <CardItem 
+                    key={index} 
+                    item={item} 
+                    setTransferDataCb={setTransferDataCb} 
+                    setModalDataCb={setModalDataCb}
+                    setToggleCb={setToggleCb}
+                    setToggle2Cb={setToggle2Cb}
+                  />)
+                ))}
+            </ul>
+            {
+              loading || <ul className="container-page-list">
+                <button className="container-page-item" onClick={() => setPageIndex(pageIndex - 1)} disabled={pageIndex === 1}>Prev</button>
+                {pageTemplate.map((item, index) => <div key={index}>{item}</div>)}
+                <button className="container-page-item" onClick={() => setPageIndex(pageIndex + 1)} disabled={pageIndex === page}>Next</button>
+              </ul>
+            }
+            </>
+          }
         </div>
       </div>
 
@@ -302,22 +276,22 @@ function App() {
             <div className="transfer-button-wrap">
               <button
                 type="submit"
-                className="transfer-button transfer-button--transfer"
+                className="btn btn--transfer"
                 onClick={(e) => transferHero(e)}
               >
                 Transfer
               </button>
-              <button type="reset" className="transfer-button transfer-button--cancel" onClick={() => {
+              <button type="reset" className="btn btn--cancel" onClick={() => {
                 inputRef.current.focus();
                 setTransferAccount("");
               }}>
-                Cancel
+                Clear
               </button>
             </div>
           </form>
         </div>
       </div>
-
+      
       {/* Detail Modal */}
       <div className={toggle2 ? "detail-modal active" : "detail-modal"}>
         <div className="detail-modal-overlay" onClick={() => {setToggle2(false)}}></div>
