@@ -7,7 +7,6 @@ import HeroFi from './contracts/HeroFi.sol/HeroFi.json'
 import { ethers } from 'ethers';
 import { create } from 'ipfs-http-client'
 // import { api } from './api/index.js';
-import {promiseStatus}  from 'promise-status-async';
 
 const CONTRACT_TYPE = '0x7575c71C24091954d219d59E3513b59f8F8a552f'
 const client = create('https://ipfs.infura.io:5001/api/v0')
@@ -28,22 +27,7 @@ const AppDemo = () => {
 
 		signer = provider.getSigner()
 	}
-	useEffect(()=>{
-		getNet()
-	},[])
 	
-	const getNet = ()=>{
-		console.log(provider._networkPromise)
-
-		if(provider.hasOwnProperty('_network')){
-			console.log(1)
-		}
-		else{
-			console.log(2)
-		}
-	}
-
-
 	useEffect(() => {
 		if (window.ethereum) {
 			getAllHeroes()
