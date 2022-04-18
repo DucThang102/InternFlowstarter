@@ -27,7 +27,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         const end = pagination.page * pagination.limit;
 
         setHeroesShow(heroes.slice(start, end));
-    }, [heroes, pagination.limit, pagination.page]);
+    }, [heroes, pagination]);
     const getAllHeroes = useCallback(async () => {
         if (filter === "all-heroes") {
             try {
@@ -90,6 +90,12 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
                             setHeroes(res);
                         } else {
                             setFilter("my-heroes");
+                            setPagination((p) => {
+                                return {
+                                    ...p,
+                                    page: 1,
+                                };
+                            });
                         }
 
                         notify.success("Tạo mới hero thành công");
@@ -119,15 +125,10 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
                     );
                     const tx = await res.wait();
                     if (tx.status === 1) {
-                        if (filter === "my-heroes") {
-                            const res =
-                                await API.ethers.herofi.getHeroesOfAccount(
-                                    signer
-                                );
-                            setHeroes(res);
-                        } else {
-                            setFilter("my-heroes");
-                        }
+                        const res = await API.ethers.herofi.getHeroesOfAccount(
+                            signer
+                        );
+                        setHeroes(res);
 
                         notify.success("Transfer hero thành công");
                     } else {
@@ -141,7 +142,7 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
                 }
             }
         },
-        [filter, itemTransfer, signer]
+        [itemTransfer, signer]
     );
 
     return {

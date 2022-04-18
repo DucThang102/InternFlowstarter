@@ -9,8 +9,6 @@ const useAccount = () => {
     const [account, setAccount] = useState("");
 
     const getSigner = useCallback(async () => {
-        console.log("aaaaa");
-
         try {
             const ethereum = window.ethereum;
             if (!ethereum) {
