@@ -75,6 +75,10 @@
             0 12px 48px 16px #00000008;
         border-radius: 5px;
         padding: 20px 10px;
+        &:hover {
+            box-shadow: 0 6px 16px -8px #00000050, 0 9px 28px #0000001c,
+                0 12px 48px 16px #00000018;
+        }
         .img {
             // text-align: center;
             padding-top: 56.25% !important;
