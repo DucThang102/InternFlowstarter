@@ -16,7 +16,8 @@
         "isolatedModules": true,
         "noEmit": true,
         "jsx": "react-jsx",
-        "useUnknownInCatchVariables": false
+        "useUnknownInCatchVariables": false,
+        "types": ["react/next", "react-dom/next"]
     },
     "include": ["src"]
 }

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+import { useState, useEffect } from "react";
+import { createRoot } from "react-dom/client";
 import { MdCheckCircle, MdError } from "react-icons/md";
 import "./style.scss";
 type NotifiMessageProps = {
@@ -74,25 +74,30 @@ function showNotify(
     child.className = "notify";
 
     const e = document.getElementById("__notify");
+
     if (e) {
-        ReactDOM.render(
+        const c = e.appendChild(child);
+        const root = createRoot(c);
+
+        root.render(
             <NotifyMessage
                 message={message}
                 time={time}
                 classChill={classChill}
-            />,
-            e.appendChild(child)
+            />
         );
     } else {
         const mess = document.createElement("DIV");
         mess.id = "__notify";
-        ReactDOM.render(
+        const d = document.body.appendChild(mess);
+        const root = createRoot(d);
+
+        root.render(
             <NotifyMessage
                 message={message}
                 time={time}
                 classChill={classChill}
-            />,
-            document.body.appendChild(mess)
+            />
         );
     }
 }

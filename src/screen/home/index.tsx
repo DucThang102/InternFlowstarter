@@ -8,6 +8,7 @@ import Model from "../../components/model";
 import Form from "./Form";
 import { FiLoader } from "react-icons/fi";
 import { Pagination } from "antd";
+import notify from "../../components/notify";
 
 export const sex = [
     { label: "Male", value: 0 },
@@ -53,6 +54,9 @@ const Index = () => {
 
     return (
         <div className="flex w-screen h-screen flex-col overflow-hidden">
+            <button onClick={() => notify.success("sadadsadassadsa")}>
+                sadsada
+            </button>
             <Header account={account} getSigner={getSigner} />
             <div className="flex flex-row _content">
                 <Sider account={account} createHero={createHero} />
