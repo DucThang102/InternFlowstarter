@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto mb-5" width="200">
+  <v-card class="mx-auto mb-5" width="234">
     <v-img class="white--text align-end" height="200px" :src="hero.avatar">
     </v-img>
     <v-card-subtitle class="pb-0"
