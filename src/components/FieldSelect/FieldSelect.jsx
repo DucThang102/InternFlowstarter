@@ -22,9 +22,6 @@ export default function FieldSelect({ title, defaultValue, values, onSelect }) {
           label={title}
           onChange={handleChange}
         >
-          <MenuItem value="">
-            <em>None</em>
-          </MenuItem>
           {values.map((value, index) => (
             <MenuItem key={index} value={value}>
               {getLabels(title)[value]}

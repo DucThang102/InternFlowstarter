@@ -17,10 +17,16 @@ code {
   background-color: #edf7ed;
   color: #1e4620;
 }
+.Toastify__progress-bar.Toastify__progress-bar--success {
+  background-color: #edf7ed;
+}
 
 .Toastify__toast-theme--dark.Toastify__toast--error {
   background-color: #fdeded;
   color: #5f2120;
+}
+.Toastify__progress-bar.Toastify__progress-bar--error {
+  background-color: #fdeded;
 }
 
 .Toastify__close-button.Toastify__close-button--dark {

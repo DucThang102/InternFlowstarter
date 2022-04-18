@@ -34,9 +34,13 @@ function CardList({ data = [], currentAcc, signer, getHeroOfAccount }) {
   };
   return (
     <>
-      <Grid container spacing={2}>
+      <Grid
+        sx={{ mb: 3, minHeight: { xs: "1387px", sm: "1040px", lg: "694px" } }}
+        container
+        spacing={2}
+      >
         {data.map((item) => (
-          <Grid key={item.id} item xs={6} sm={4} lg={3}>
+          <Grid key={item.id} item xxs={12} xs={6} sm={4} lg={3}>
             <Card
               item={item}
               onOpen={() => setShowModal(true)}
