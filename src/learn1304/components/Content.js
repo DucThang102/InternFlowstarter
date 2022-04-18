@@ -1,8 +1,9 @@
-import { Button } from 'antd';
+import { Button, Pagination, Radio } from 'antd';
 import React from 'react';
 import CardHero from './card';
+import {Tabs} from '../constant/index.js'
 
-const Tabs = ['All Heroes','My Heroes']
+
 const Content = (props) => {
 	const {
 		getAllHeroes,
@@ -11,32 +12,51 @@ const Content = (props) => {
 		addressMeta,
 		handleConnectMetaMask,
 		heros,
-		handleTransfer
+		handleTransfer,
+		currentPage,
+		pageSize,
+		total,
+		handleChangePage
 		}=props
+
+	const handleChange =(e)=>{
+		if(e.target.value === 'All Heroes'){
+			getAllHeroes()
+		}else{
+			getMyHeroes()
+		}
+	}
 	return (
 		<>
 			<div className='content_top'>
 				<div className='btn_left'>
-					<Button
-						onClick={getAllHeroes}
-					>
-						{Tabs[0]}
-					</Button>
-					<Button
-						onClick={getMyHeroes}
-					>
-						{Tabs[1]}
-					</Button>
+					<Radio.Group defaultValue='All Heroes' onChange={handleChange}>
+					{ Tabs.map(tab => (
+							<Radio.Button value={tab}>{tab}</Radio.Button>
+					))}
+					</Radio.Group>
 				</div>
 				{
 					isConnect
-						? <p>{addressMeta}</p>
+						? <p className='address'>{addressMeta}</p>
 						: <Button type='danger' onClick={handleConnectMetaMask}>Connect MetaMask</Button>
 				}
 			</div>
-			<div className='content_list'>
-				<CardHero data={heros} handleTransfer={handleTransfer} isConnect={isConnect} />
-			</div>
+			{heros && heros.length > 0 && 
+				<>
+					<div className='content_list'>
+						<CardHero data={heros} handleTransfer={handleTransfer} isConnect={isConnect} />
+					</div>
+					<Pagination
+						total={total}
+						current={currentPage}
+						pageSize={pageSize}
+						onChange={handleChangePage}
+						showSizeChanger={false}
+						showTotal={total => `Total ${total} items`}
+					/>
+				</>
+			}
 		</>
 	)
 }

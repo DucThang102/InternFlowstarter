@@ -1,82 +1,11 @@
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import React from 'react';
+import {SEX, GENERATION, HERO_CLASS, STAR } from '../constant/index.js'
 
 const { Option } = Select
-const SEX = [
-	{
-		label: 'Male',
-		value: 0
-	},
-	{
-		label: 'Female',
-		value: 1
-	}
-]
-const GENERATION = [
-	{
-		label: 'GENESIS',
-		value: 0
-	},
-	{
-		label: 'NORMAL',
-		value: 1
-	},
-]
-const HERO_CLASS = [
-	{
-		label: 'WATER',
-		value: 0
-	},
-	{
-		label: 'PLANT',
-		value: 1
-	},
-	{
-		label: 'FIRE',
-		value: 2
-	},
-	{
-		label: 'THUNDER',
-		value: 3
-	},
-	{
-		label: 'DARK',
-		value: 4
-	},
-	{
-		label: 'LIGHT',
-		value: 5
-	}
-]
-const STAR = [
-	{
-		label: 'ONE',
-		value: 0
-	},
-	{
-		label: 'TWO',
-		value: 1
-	},
-	{
-		label: 'THREE',
-		value: 2
-	},
-	{
-		label: 'FOUR',
-		value: 3
-	},
-	{
-		label: 'FIVE',
-		value: 4
-	},
-	{
-		label: 'SIX',
-		value: 5
-	}
-]
 
 const FormCreate = (props) => {
-	const {onFinish, handleChangeAvatar}=props
+	const {onFinish, handleChangeAvatar, formCreate}=props
 	return (
 		<>
 			<Row>
@@ -85,30 +14,32 @@ const FormCreate = (props) => {
 					onFinish={onFinish}
 					layout="vertical"
 					autoComplete="off"
-					initialValues={{
-						avatar: '',
-						class: HERO_CLASS[0].value,
-						generation: GENERATION[0].value,
-						sex: SEX[0].value,
-						star: STAR[0].value
-					}}
+					// initialValues={{
+					// 	avatar: '',
+					// 	class: '',
+					// 	generation: '',
+					// 	sex: '',
+					// 	star: ''
+					// }}
+					form={formCreate}
 				>
 				<Col span={24}>
 					<Form.Item
 						name="avatar"
 						label='Avatar'
 					>
-						<Input type={'file'} onChange={handleChangeAvatar}/>
+						<Input type={'file'} onChange={handleChangeAvatar} accept=".jpg, .png" />
 					</Form.Item>
 				</Col>
 				<Col span={24}>
 					<Form.Item
 						name="class"
 						label='Class'
+						rules={[{ required: true, message: 'Please select class' }]}
 					>
 						<Select
-							defaultValue={{ value: 'WATER' }}
 							style={{ width: '100%' }}
+							placeholder="CLASS"
 						>
 							{HERO_CLASS.map(item => (
 								<Option key={item?.value} value={item?.value}>{item?.label}</Option>
@@ -120,9 +51,11 @@ const FormCreate = (props) => {
 					<Form.Item
 						name="sex"
 						label='Sex'
+						rules={[{ required: true, message: 'Please select sex' }]}
 					>
 						<Select
 							style={{ width: '100%' }}
+							placeholder="SEX"
 						>
 							{SEX.map(item => (
 								<Option key={item?.value} value={item?.value}>{item?.label}</Option>
@@ -134,9 +67,10 @@ const FormCreate = (props) => {
 					<Form.Item
 						name="generation"
 						label='Generation'
+						rules={[{ required: true, message: 'Please select generation' }]}
 					>
 						<Select
-							defaultValue={{ value: 'GENESIS' }}
+							placeholder="GENERATION"
 							style={{ width: '100%' }}
 						>
 							{GENERATION.map(item => (
@@ -149,9 +83,10 @@ const FormCreate = (props) => {
 					<Form.Item
 						name="star"
 						label='Star'
+						rules={[{ required: true, message: 'Please select star' }]}
 					>
 						<Select
-							defaultValue={{ value: 'ONE' }}
+							placeholder="STAR"
 							style={{ width: '100%' }}
 						>
 							{STAR.map(item => (

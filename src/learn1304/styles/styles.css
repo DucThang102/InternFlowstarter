@@ -5,6 +5,12 @@
 .form_create{
 	width: 90%;
 }
+.address{
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+
+}
 .content_top{
 	display: flex;
 	justify-content: space-between;
@@ -17,11 +23,12 @@
 .content_list{
 	width: 100%;
 	display: flex;
+	flex-direction: row;
 	flex-wrap: wrap;
 	margin-left: -15px;
 }
 .card_style{
-	width: calc(25% - 30px);
+	width: calc(20% - 30px);
 	box-sizing: border-box;
 	border-radius: 10px;
 	margin-left: 30px;
@@ -30,9 +37,16 @@
 	display: flex;
 	justify-content: center;
 }
+.content_card{
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
 .card_image{
-	width: 100px;
-	height: 100px;
+	width: 80px;
+	height: 80px;
+	margin: 0 auto ;
 }
 .card_avatar{
 	width: 100%;
@@ -42,6 +56,12 @@
 }
 .card_content{
 	margin: 10px auto;
+	padding: 5px;
+}
+.card_bottom{
+	display: flex;
+	justify-content: center;
+	margin-top: auto;
 }
 @media only screen and (max-width: 800px) {	
 	.content_top{
@@ -51,23 +71,42 @@
 		display: block;
 	}
 }
-@media only screen and (min-width: 1600px) {
-
-}
-@media only screen and (min-width: 1200px) {
-	.content_list{
-
-	}
+@media only screen and (max-width: 1600px) {
 	.card_style{
-		
+		width: calc(20% - 30px);
 	}
 }
-@media only screen and (min-width: 992px) {
-	
+@media only screen and (max-width: 1200px) {
+	.card_style{
+		width: calc(20% - 30px);
+	}
 }
-@media only screen and (min-width: 768px) {
-	
+@media only screen and (max-width: 1024px) {
+	.card_style{
+		width: calc(25% - 30px);
+	}
 }
-@media only screen and (min-width: 576px) {
-	
+@media only screen and (max-width: 992px) {
+	.card_style{
+		width: calc(33.3% - 30px);
+	}
+}
+@media only screen and (max-width: 768px) {
+	.card_style{
+		width: calc(50% - 30px);
+	}
+}
+@media only screen and (max-width: 600px) {
+	.card_style{
+		width: calc(50% - 30px);
+	}
+}
+@media only screen and (max-width: 576px) {
+	.form_create{
+		padding: 15px;
+		width: 100%;
+	}
+	.card_style {
+		width: 100%;
+	}
 }
