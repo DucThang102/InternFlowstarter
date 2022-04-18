@@ -143,7 +143,6 @@ const useHero = (signer: ethers.providers.JsonRpcSigner | undefined) => {
         },
         [filter, itemTransfer, signer]
     );
-    console.log("pppp", pagination);
 
     return {
         heroeShow,
