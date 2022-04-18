@@ -5,3 +5,22 @@
 .heroes {
   padding-top: 50px;
 }
+
+.info-signer {
+  float: right;
+}
+
+@media only screen and (max-width: 768px) {
+  .info-signer {
+    margin-top: 10px;
+    float: left;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .info-signer {
+    max-width: 205px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
