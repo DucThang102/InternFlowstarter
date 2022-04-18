@@ -8,7 +8,6 @@ import Model from "../../components/model";
 import Form from "./Form";
 import { FiLoader } from "react-icons/fi";
 import { Pagination } from "antd";
-import notify from "../../components/notify";
 
 export const sex = [
     { label: "Male", value: 0 },
