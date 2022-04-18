@@ -52,7 +52,7 @@ const Index = () => {
     } = useHero(signer);
 
     return (
-        <div className="flex w-screen h-screen flex-col overflow-hidden">
+        <div className="flex w-screen h-screen flex-col overflow-hidden max-w-screen-2xl mx-auto">
             <Header account={account} getSigner={getSigner} />
             <div className="flex flex-row _content">
                 <Sider account={account} createHero={createHero} />
