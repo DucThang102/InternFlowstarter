@@ -54,9 +54,6 @@ const Index = () => {
 
     return (
         <div className="flex w-screen h-screen flex-col overflow-hidden">
-            <button onClick={() => notify.success("sadadsadassadsa")}>
-                sadsada
-            </button>
             <Header account={account} getSigner={getSigner} />
             <div className="flex flex-row _content">
                 <Sider account={account} createHero={createHero} />
