@@ -1,19 +1,24 @@
 
-
-body{
-  padding: 20px 40px
+.site-layout .site-layout-background {
+  background: #fff;
 }
 
-.loader{
-  position: fixed;
-  left: 50%;
-  top: 50%;
+.ant-form{
+  padding: 20px;
 }
 
-.ant-btn{
-  min-width: 100px;
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.card{
-  margin: 10px;
+.ant-image-img{
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.card-item{
+  margin-bottom: 20px;
+  /* border: 1px solid #1890FF; */
 }

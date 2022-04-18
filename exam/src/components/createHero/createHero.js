@@ -1,7 +1,7 @@
 import React, { memo, useState } from "react";
 import { Button, Form, Input, Select, useForm } from "antd";
 import { create } from 'ipfs-http-client'
-import { contractSigner } from "../../App";
+// import { contractSigner } from "../../App";
 import Loader from "../loader/loader";
 import ClipLoader from 'react-spinners/ClipLoader'
 import { toast } from 'react-toastify';
@@ -36,7 +36,7 @@ const star = [
     { label: "SIX", value: 5 }
 ]
 
-const CreateHero = ({ getMyHeroesContract, setIsLoading }) => {
+const CreateHero = ({ getMyHeroesContract, setIsLoading, contractSigner }) => {
     const [fileURL, setFileURL] = useState()
     const [status, setStatus] = useState(false)
 
@@ -105,6 +105,7 @@ const CreateHero = ({ getMyHeroesContract, setIsLoading }) => {
                     generation: generation[0].value,
                     star: star[0].value,
                 }}
+                size='large'
             >
                 <Form.Item label="Avatar">
                     <Input type="file" onChange={onChangeFile} />
@@ -123,7 +124,7 @@ const CreateHero = ({ getMyHeroesContract, setIsLoading }) => {
                     {renderOption(star)}
                 </Form.Item>
 
-                <Button type="primary" htmlType="submit" style={{ minWidth: 130 }} >{status ? <ClipLoader size={20} color={'#fff'} /> : 'Create Hero'}</Button>
+                <Button size='large' type="primary" htmlType="submit" style={{ minWidth: 130 }} >{status ? <ClipLoader size={20} color={'#fff'} /> : 'Create Hero'}</Button>
             </Form>
         </div>
     )
