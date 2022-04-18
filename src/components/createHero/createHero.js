@@ -38,11 +38,10 @@ export const star = [
     { label: "SIX", value: 5 }
 ]
 
-const CreateHero = ({ getMyHeroesContract, setIsLoading, contractSigner }) => {
+const CreateHero = ({ getMyHeroesContract, setIsLoading, contractSigner, setShowSider }) => {
     const [fileURL, setFileURL] = useState()
     const [status, setStatus] = useState(false)
     const [statusLoadImg, setStatusLoadImg] = useState('idle')
-    console.log(fileURL)
 
     const onFinish = async (value) => {
         if (statusLoadImg === 'done') {
@@ -55,14 +54,18 @@ const CreateHero = ({ getMyHeroesContract, setIsLoading, contractSigner }) => {
             try {
                 const res = await contractSigner.createHero(hero.avatar, hero.class, hero.sex, hero.generation, hero.star)
                 const tx = await res.wait()
-                getMyHeroesContract()
+                console.log(1);
+                await getMyHeroesContract()
+                console.log(2);
                 setIsLoading(false)
                 setStatus(false)
+                // setShowSider(false)
                 toast.success('Create Successfully!')
             } catch (error) {
+                console.log(3);
                 setIsLoading(false)
                 setStatus(false)
-                toast.error('error')
+                toast.error('Create error')
             }
         }
     }
@@ -101,7 +104,6 @@ const CreateHero = ({ getMyHeroesContract, setIsLoading, contractSigner }) => {
         },
 
         async customRequest(props) {
-            console.log(props)
 
             const { file, onSuccess, onError } = props
             try {

@@ -135,6 +135,7 @@ function App() {
       setIsLoading(false)
     }
   }
+  console.log(showSider);
 
   return (
 
@@ -152,10 +153,10 @@ function App() {
           {
             breakpoint ? (
               <Drawer visible={showSider} placement="left" onClose={() => setShowSider(false)} className='drawer'>
-                <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner} />
+                <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner} setShowSider={setShowSider}/>
               </Drawer>
             ) : (
-              <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner} />
+              <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner} setShowSider={setShowSider}/>
             )
           }
         </Sider>
