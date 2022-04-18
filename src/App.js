@@ -241,6 +241,10 @@ function App() {
   };
 
   const onChangePage = (page = 1, pageSize = 5) => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
     setCurrentPage(page);
     setPageSize(pageSize);
   };
