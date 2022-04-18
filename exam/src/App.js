@@ -9,17 +9,15 @@ import Loader from './components/loader/loader';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { ToastContainer, toast } from 'react-toastify';
 import { MenuOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
-
+import { Pagination } from 'antd';
 
 const ADDRESS = '0x7575c71C24091954d219d59E3513b59f8F8a552f'
-// const provider = new ethers.providers.Web3Provider(window.ethereum)
-// const contract = new ethers.Contract(ADDRESS, heroAbi.abi, provider)
-// const signer = provider.getSigner()
-// export const contractSigner = new ethers.Contract(ADDRESS, heroAbi.abi, signer)
 
 function App() {
   const [addressWallet, setAddressWallet] = useState()
   const [heroes, setHeroes] = useState([])
+  const [allHeroes, setAllHeroes] = useState([])
+  const [myHeroes, setMyHeroes] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isModal, setIsModal] = useState(false)
   const [text, setText] = useState()
@@ -27,44 +25,49 @@ function App() {
   const [rule, setRule] = useState()
   const [showSider, setShowSider] = useState(false)
   const [breakpoint, setBreakPoint] = useState(false)
+  const [total, setTotal] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pageSize, setPageSize] = useState(12)
 
   const { Header, Sider, Content } = Layout;
   const getAddressMetamask = async () => {
     const myAddress = await signer.getAddress()
     setAddressWallet(myAddress)
   }
-let provider
-let contract
-let signer
-let contractSigner
-  if(typeof window.ethereum !=='undefined'){
+  let provider
+  let contract
+  let signer
+  let contractSigner
+  
+  if (typeof window.ethereum !== 'undefined') {
     provider = new ethers.providers.Web3Provider(window.ethereum)
     contract = new ethers.Contract(ADDRESS, heroAbi.abi, provider)
     signer = provider.getSigner()
     contractSigner = new ethers.Contract(ADDRESS, heroAbi.abi, signer)
   }
 
-  // const provider = useMemo(() => new ethers.providers.Web3Provider(window.ethereum), [window.ethereum])
-  // const contract = useMemo(() => new ethers.Contract(ADDRESS, heroAbi.abi, provider), [window.ethereum])
-  // const signer = provider.getSigner()
-  // const contractSigner = new ethers.Contract(ADDRESS, heroAbi.abi, signer)
-
-// console.log(window.ethereum)
   useEffect(() => {
-    // if (addressWallet) {
-      getAddressMetamask()
-      // connectMetamask()
-      getAllHeroesContract()
-    // }
+    getAddressMetamask()
+    getAllHeroesContract()
   }, [])
+
+  useEffect(() => {
+    setDataHerror()
+  }, [currentPage, allHeroes, pageSize])
+
+  const setDataHerror = () => {
+    const limit = pageSize
+    const skip = (currentPage - 1) * pageSize
+    const dataHero = allHeroes.slice(skip, skip + limit)
+    setHeroes(dataHero)
+  }
 
   const connectMetamask = async () => {
     const { ethereum } = window
     if (typeof ethereum === 'undefined') {
       window.open('https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en', 'blank')
     } else {
-      const x = await provider.send("eth_requestAccounts", []);
-      console.log(x)
+      await provider.send("eth_requestAccounts", []);
       const myAddress = await signer.getAddress()
       setAddressWallet(myAddress)
     }
@@ -75,7 +78,12 @@ let contractSigner
     setIsLoading(true)
     try {
       const result = await contract.getAllHeroes()
-      setHeroes(result)
+      if (addressWallet) {
+        const res = await contractSigner.getHeroesOfAccount()
+        setMyHeroes(res)
+      }
+      setAllHeroes(result)
+      setTotal(result.length)
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
@@ -84,17 +92,20 @@ let contractSigner
   }
 
   const getMyHeroesContract = useCallback(async () => {
+    setCurrentPage(1)
     setIsLoading(true)
     setRule('My Heroes')
     try {
       const result = await contractSigner.getHeroesOfAccount()
-      setHeroes(result)
+      setAllHeroes(result)
+      setMyHeroes(result)
+      setTotal(result.length)
       setIsLoading(false)
     } catch (error) {
       setIsLoading(false)
       toast.error('error')
     }
-  }, [heroes])
+  }, [allHeroes])
 
   const handleCancel = () => {
     setIsModal(false)
@@ -116,7 +127,6 @@ let contractSigner
       } catch (error) {
         setIsLoading(false)
         toast.error('error')
-        console.log(error)
       }
     } else {
       setText('')
@@ -139,11 +149,11 @@ let contractSigner
           }}>
           {
             breakpoint ? (
-              <Drawer visible={showSider} placement="left" onClose={() => setShowSider(false)}>
-                <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner}/>
+              <Drawer visible={showSider} placement="left" onClose={() => setShowSider(false)} className='drawer'>
+                <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner} />
               </Drawer>
             ) : (
-              <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} />
+              <CreateHero getMyHeroesContract={getMyHeroesContract} setIsLoading={setIsLoading} contractSigner={contractSigner} />
             )
           }
         </Sider>
@@ -151,11 +161,10 @@ let contractSigner
           <Header className="site-layout-background header" theme='light' >
             <Space>
               {breakpoint && <MenuOutlined style={{ fontSize: 20 }} onClick={() => setShowSider(true)} />}
-              <Button size='large' type="primary" onClick={getAllHeroesContract} >All Heroes</Button>
-              <Button size='large' type="primary" onClick={getMyHeroesContract}>My Heroes</Button>
+
             </Space>
 
-            {!addressWallet ? <Button type="primary" size='large' onClick={connectMetamask}>Connect Metamask</Button> : <div>{addressWallet}</div>}
+            {!addressWallet ? <Button type="primary" size='large' onClick={connectMetamask}>Connect Metamask</Button> : <div className='adress-wallet'>{addressWallet}</div>}
           </Header>
           <Content
             className="site-layout-background"
@@ -165,19 +174,47 @@ let contractSigner
               minHeight: 280,
             }}
           >
-            <Card title={rule}>
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+            <Card
+              title={
+                <div className='cardContainer-title'>
+                  <div>{rule}</div>
+                  <div className='button-group'>
+                    <Button size='large' type={rule === 'All Heroes' ? 'danger' : 'primary'} onClick={getAllHeroesContract} style={{ margin: 10 }}>All Heroes</Button>
+                    <Button size='large' type={rule !== 'All Heroes' ? 'danger' : 'primary'} onClick={getMyHeroesContract}>My Heroes</Button>
+                  </div>
+                </div>
+              }
+
+            >
+              <div className='list-heroes'>
                 {
                   heroes.map((hero, index) => {
                     return (
                       <div key={index} className='card-item'>
                         <Space>
-                          <CardHero data={hero} setIsModal={setIsModal} setCurrentHero={setCurrentHero} />
+                          <CardHero data={hero} setIsModal={setIsModal} setCurrentHero={setCurrentHero} myHeroes={myHeroes} />
                         </Space>
                       </div>
                     )
                   })
                 }
+              </div>
+              <div className='page'>
+                <Pagination
+                  current={currentPage}
+                  pageSize={pageSize}
+                  total={total}
+                  pageSizeOptions={[10, 12, 20, 50, 100]}
+                  showTotal={(total, range) => {
+                    return 'Total ' + total + ' items '
+                  }}
+                  onChange={(page, pageSize) => {
+                    setCurrentPage(page)
+                  }}
+                  onShowSizeChange={(current, size) => {
+                    setPageSize(size)
+                  }}
+                />
               </div>
             </Card>
             <Modal
