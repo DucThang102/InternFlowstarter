@@ -26,5 +26,13 @@ export const start = [
     {label: 'SIX', value: 5},
 ];
 
-export const somethingError = 'Something error';
-export const transferError = "There's something wrong";
+export const ERRORS = {
+    somethingError: 'Something error',
+    transferError: 'There"s something wrong',
+    limitSizeFile: 'Size image smaller than:',
+    createLimitSized: 'Your photo has exceeded:',
+    uploadFile: 'Something error uploading file',
+    notExistMetamask: 'Not exist Metamask'
+}
+
+export const MAXSIZE = 50000

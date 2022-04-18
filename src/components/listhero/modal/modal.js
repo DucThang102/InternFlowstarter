@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { transferError } from '../../../constanst/index';
+import { ERRORS } from '../../../constanst/index';
 
 const ModalTransfer = ({contracts, contractSigner, address, handleGetHeroOfAccount}) => {
     const[value, setValue] = useState();
@@ -30,7 +30,7 @@ const ModalTransfer = ({contracts, contractSigner, address, handleGetHeroOfAccou
         if(err.error){
           toast.error(err.error.message.toString().substring(0, 30) + "...");
         }else{
-          toast.error(transferError);
+          toast.error(ERRORS.transferError);
         }
         setLoading(false)
       }

@@ -32,16 +32,34 @@ html, body{
     margin-left: 10px;
 }
 .btn_all{
-    background-color: goldenrod;
-    color: #fff;
+    /* background-color: goldenrod; */
+    color: #111;
     border-radius: 5px;
 }
 .btn_my{
-    background-color: green;
-    color: #fff;
+    /* background-color: green; */
+    color: #111;
     border-radius: 5px;
 }
-
+.tabs{
+    padding: 5px 20px;
+    background-color: #fff;
+    border: 1px solid #adadad;
+    outline: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.tabs:first-child{
+    color: #111;
+    margin-right: 5px;
+}
+.tabs:last-child{
+    color: purple;
+}
+.active-tabs{
+    background-color: blue;
+    color: #fff !important;
+}
 .card{
     width: 210px;
     height: auto;
@@ -77,12 +95,16 @@ html, body{
 }
 
 .custom-file-input {
-    color: transparent;
+    color: #111;
+    font-size: 13px;
   }
 .custom-file-input::-webkit-file-upload-button {
-    visibility: hidden;
-  }
-.custom-file-input::before {
+    background: none;
+    outline: none;
+    font-size: 10px;
+    border: 1px solid #ccc;
+}
+/* .custom-file-input::before {
     content: 'Select some files';
     color: black;
     display: inline-block;
@@ -90,9 +112,44 @@ html, body{
     white-space: nowrap;
     cursor: pointer;
     font-size: 10pt;
-}
+} */
 .ant-input:focus{
     outline: none !important;
+}
+.pagination{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding: 20px 0;
+}
+.Toastify__close-button{
+    align-self: center !important;
+}
+.btn_submit{
+    width: 120px;
+    height: 50px; 
+    border-radius: 5px; 
+    font-size: 12px;
+}
+.btn_submit:first-child{
+   margin-right: 5px;
+}
+@media only screen and (max-width: 1024px){
+    .lists{
+        display: flex;
+        justify-content: center;
+    }
+    .card{
+        width: 200px;
+    }
+    .btn_submit{
+        width: 100%;
+        border-radius: 7px;
+    }
+    .btn_submit:first-child{
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
 }
 @media only screen and (max-width: 767px){
     .lists{
@@ -115,6 +172,9 @@ html, body{
 @media only screen and (max-width: 580px){
     .heroes{
         flex-direction: column
+    }
+    .title{
+        display: block;
     }
     .listheroes{
         margin: 0;

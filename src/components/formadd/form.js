@@ -1,18 +1,23 @@
 import { Button, Col, Form, Input, Select } from 'antd';
 import React, { useState } from 'react';
-import {sex, generation, heroClass, start, somethingError} from '../../constanst/index';
+import {sex, generation, heroClass, start, ERRORS, MAXSIZE} from '../../constanst/index';
 // import { ClipLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const {Option} = Select
-const FormAdd = ({onChange, fileUrl, contract, handleGetHeroOfAccount}) => {
+const FormAdd = ({onChange, fileUrl, contract, handleGetHeroOfAccount, isSize}) => {
     const [loading, setLoading] = useState(false);
     const [formCreateHero] = Form.useForm()
+    
     const handleCreateHero = async (values) => {
         const hero = {
             ...values,
             avatar: fileUrl
+        }
+        if(isSize === true){
+            toast.error(`${ERRORS.createLimitSized} ${MAXSIZE/10000}MB`)
+            return
         }
         try{
             setLoading(true)
@@ -35,10 +40,14 @@ const FormAdd = ({onChange, fileUrl, contract, handleGetHeroOfAccount}) => {
                 toast.error(err.message.toString().substring(0, 30) + "...")
             }
             else{
-                toast.error(somethingError)
+                toast.error(ERRORS.somethingError)
             }
             setLoading(false)
         }
+    }
+
+    const clearForm = () => {
+        formCreateHero.resetFields()
     }
     return (
     <Col xs={24} md={6} sm={6}>
@@ -48,7 +57,7 @@ const FormAdd = ({onChange, fileUrl, contract, handleGetHeroOfAccount}) => {
                 name="avatar"
                 rules={[{ required: true, message: 'Please choose avatar!' }]}
             >
-                <Input className="custom-file-input" onChange={onChange} type='file' />
+                <Input className="custom-file-input" id='reset' accept='image/*' onChange={onChange} type='file' />
             </Form.Item>
             <Form.Item 
                 label="Class" 
@@ -99,9 +108,17 @@ const FormAdd = ({onChange, fileUrl, contract, handleGetHeroOfAccount}) => {
                     type='primary' 
                     htmlType='submit' 
                     loading={loading ? true : false}
-                    style={{width: 150, height: 50, borderRadius: 5}}
+                    className='btn_submit'
                 >
                     CREATE HERO
+                </Button>
+                <Button 
+                    type='primary' 
+                    danger
+                    onClick={clearForm}
+                    className='btn_submit'
+                >
+                    CLEAR
                 </Button>
             </Form.Item>
         </Form>
