@@ -81,6 +81,7 @@
               color="success"
               class="mt-4"
               @click="createHero()"
+              :disabled="isConnect === 1"
               >Create hero</v-btn
             >
           </v-col>
