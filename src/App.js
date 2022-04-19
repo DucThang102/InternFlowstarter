@@ -1,4 +1,4 @@
-import { Box, Grid, Tab, Tabs } from "@mui/material";
+import { Box, Grid, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -125,6 +125,7 @@ function App() {
           signer={signer}
           getHeroOfAccount={getHeroOfAccount}
           onConnect={connectWallet}
+          windowWidth={windowWidth}
         />
         <Grid container spacing={{ xs: 0, sm: 4 }}>
           <Grid item xs={12} sm={3.5} md={2.5}>
@@ -133,20 +134,48 @@ function App() {
             )}
           </Grid>
           <Grid item xs={12} sm={8.5} md={9.5}>
-            <Box mb={2}>
+            <Stack
+              direction={{ xxs: "column", xs: "row" }}
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{ mb: 2 }}
+            >
               <Tabs
                 value={tabNumber}
                 onChange={handleTabChange}
                 aria-label="disabled tabs example"
               >
                 <Tab
+                  sx={{
+                    fontSize: { xxs: "12px", xs: "14px" },
+                    px: { xxs: "10px", xs: "16px" },
+                    py: { xxs: "8px", xs: "12px" },
+                  }}
                   label="My Heros"
                   disabled={!signer}
                   onClick={getHeroOfAccount}
                 />
-                <Tab label="All Heros" onClick={getAllHero} />
+                <Tab
+                  sx={{
+                    fontSize: { xxs: "12px", xs: "14px" },
+                    px: { xxs: "10px", xs: "16px" },
+                    py: { xxs: "8px", xs: "12px" },
+                  }}
+                  label="All Heros"
+                  onClick={getAllHero}
+                />
               </Tabs>
-            </Box>
+              <Typography sx={{ mt: { xxs: 3, xs: 0 } }} variant="body2">
+                Total Hero:{" "}
+                <Typography
+                  component="span"
+                  variant="subtitle2"
+                  color="primary"
+                >
+                  {data.length}
+                </Typography>
+              </Typography>
+            </Stack>
             <CardList
               currentAcc={account}
               signer={signer}

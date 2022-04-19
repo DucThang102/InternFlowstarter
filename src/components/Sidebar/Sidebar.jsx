@@ -138,9 +138,9 @@ function Sidebar({ signer, getHeroOfAccount, onToggleMenu }) {
 
   return (
     <>
-      <Stack direction="row" justifyContent="flex-end" pt={2}>
+      <Stack direction="row" justifyContent="flex-end" pt={1}>
         <IconButton
-          sx={{ display: { xs: "block", sm: "none" } }}
+          sx={{ display: { xs: "block", sm: "none" }, mr: { xxs: -1, xs: 0 } }}
           aria-label="delete"
           onClick={() => onToggleMenu && onToggleMenu(false)}
           size="large"
@@ -203,7 +203,7 @@ function Sidebar({ signer, getHeroOfAccount, onToggleMenu }) {
         <Stack
           sx={{
             flexDirection: { md: "column", lg: "row" },
-            rowGap: { xs: 1 },
+            rowGap: { xxs: 1 },
             columnGap: { lg: 1 },
           }}
         >

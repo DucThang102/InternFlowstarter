@@ -3,7 +3,13 @@ import { Button, IconButton, Stack } from "@mui/material";
 import React, { useState } from "react";
 import Menu from "../Menu/Menu";
 
-function Header({ onConnect, currentAcc, signer, getHeroOfAccount }) {
+function Header({
+  onConnect,
+  currentAcc,
+  signer,
+  getHeroOfAccount,
+  windowWidth,
+}) {
   const [isShow, setIsShow] = useState(false);
 
   const toggleDrawer = (open) => {
@@ -16,7 +22,7 @@ function Header({ onConnect, currentAcc, signer, getHeroOfAccount }) {
         direction="row"
         alignItems="center"
         justifyContent="space-between"
-        py={4}
+        py={{ xxs: 2, sm: 4 }}
       >
         <Button
           onClick={() => onConnect()}
@@ -40,12 +46,14 @@ function Header({ onConnect, currentAcc, signer, getHeroOfAccount }) {
           <MenuIcon />
         </IconButton>
       </Stack>
-      <Menu
-        signer={signer}
-        getHeroOfAccount={getHeroOfAccount}
-        isShow={isShow}
-        onToggleMenu={toggleDrawer}
-      />
+      {windowWidth <= 600 && (
+        <Menu
+          signer={signer}
+          getHeroOfAccount={getHeroOfAccount}
+          isShow={isShow}
+          onToggleMenu={toggleDrawer}
+        />
+      )}
     </>
   );
 }
