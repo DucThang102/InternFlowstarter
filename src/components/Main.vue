@@ -18,8 +18,9 @@
               >Please choose photo</span
             >
             <p>Class</p>
-            <select
-              class="d-block py-2 px-3 rounded-lg"
+            <div class="select">
+              <select
+              class="d-block py-2 px-3 rounded"
               style="width: 100%; border: 1px solid black; outline: none"
               v-model="selectClass"
             >
@@ -31,10 +32,12 @@
                 {{ item.label }}
               </option>
             </select>
+            </div>
             <p>Sex</p>
 
-            <select
-              class="d-block py-2 px-3 rounded-lg"
+            <div class="select">
+              <select
+              class="d-block py-2 px-3 rounded"
               style="width: 100%; border: 1px solid black; outline: none"
               v-model="selectSex"
             >
@@ -46,10 +49,12 @@
                 {{ item.label }}
               </option>
             </select>
+            </div>
 
             <p>Generation</p>
-            <select
-              class="d-block py-2 px-3 rounded-lg"
+            <div class="select">
+              <select
+              class="d-block py-2 px-3 rounded"
               style="width: 100%; border: 1px solid black; outline: none"
               v-model="selectGeneration"
             >
@@ -61,9 +66,11 @@
                 {{ item.label }}
               </option>
             </select>
+            </div>
             <p>Star</p>
-            <select
-              class="d-block py-2 px-3 rounded-lg"
+            <div class="select">
+              <select
+              class="d-block py-2 px-3 rounded"
               style="width: 100%; border: 1px solid black; outline: none"
               v-model="selectStar"
             >
@@ -75,6 +82,7 @@
                 {{ item.label }}
               </option>
             </select>
+            </div>
             <v-btn
               elevation="2"
               large
@@ -92,10 +100,10 @@
                 <div class="d-flex flex-wrap">
                   <v-btn
                     elevation="2"
-                    class="mr-3 mb-3 mb-md-2"
+                    class="mr-3 mb-3 mb-md-2 white--text"
                     :style="[
                       tabActive
-                        ? { background: 'red' }
+                        ? { background: '#78f271' }
                         : { background: '#999' },
                     ]"
                     @click="getAllHeroes()"
@@ -107,9 +115,9 @@
                     :style="[
                       tabActive
                         ? { background: '#999' }
-                        : { background: 'red' },
+                        : { background: '#78f271' },
                     ]"
-                    class="mr-5 mt-xs-0"
+                    class="mr-5 mt-xs-0 white--text"
                     :disabled="isConnect === 1"
                     >My Heros</v-btn
                   >
@@ -120,21 +128,27 @@
                     v-if="connectMetamaskSuccess"
                     >Connect Metamask</v-btn
                   >
-                  <div v-else class="my-auto mt-6 mt-lg-0">
+                  <div
+                    v-else
+                    class="my-auto mt-6 mt-lg-0"
+                  >
                     <span style="overflow: hidden; fontsize: 11px">{{
                       addressWallet
                     }}</span>
                   </div>
                 </div>
               </v-col>
-              <!-- ==============total============ -->
-              <v-col cols="12"> Total Hero: ({{ totalHero }}) </v-col>
               <!-- =================all=================== -->
               <v-alert type="success" v-if="isSuccess">{{
                 successMes
               }}</v-alert>
               <v-alert type="error" v-if="isError">{{ errorMes }}</v-alert>
-              <div class="mx-auto d-flex justify-center" v-if="isLoading">
+              <!-- ==============total============ -->
+              <v-col cols="12"> Total Hero: ({{ totalHero }}) </v-col>
+              <div
+                class="d-block mx-auto d-flex justify-center"
+                v-if="isLoading"
+              >
                 <v-progress-circular
                   indeterminate
                   color="primary"
@@ -174,7 +188,7 @@
       </template>
       <v-card v-if="dialog">
         <v-card-title class="text-h5 grey lighten-2">
-          Nhập địa chỉ ví
+          Enter wallet address
         </v-card-title>
         <v-card-text>
           <input
@@ -267,13 +281,16 @@ export default {
       ],
       page: 1,
       pageSize: 6,
+      isExtention: false,
     };
   },
   async created() {
-    // await this.connectMetamask();
-    await this.getAllHeroes();
-    this.initPage();
-    this.changePage(this.page);
+    await this.checkExtention();
+    if (this.isExtention) {
+      await this.getAllHeroes();
+      this.initPage();
+      this.changePage(this.page);
+    }
   },
   computed: {
     pages() {
@@ -300,21 +317,33 @@ export default {
     previewFile() {
       this.selectAvatar = this.$refs.myFile.files[0];
     },
-    async connectMetamask() {
+    checkExtention() {
       if (typeof window.ethereum === "undefined") {
-        alert("Bạn chưa cài extension. Vui lòng cài extention Metamask");
-      } else {
-        this.isConnect = 0;
-        const provider = new ethers.providers.Web3Provider(
-          window.ethereum,
-          "any"
-        );
-        await provider.send("eth_requestAccounts", []);
-        const signer = provider.getSigner();
-        this.signer = provider.getSigner();
-        this.addressWallet = await signer.getAddress();
         this.connectMetamaskSuccess = false;
+        this.isConnect = true
+        this.isExtention = false;
+        this.isLoading = false;
+        this.isError = true;
+        this.errorMes = "You need to install the extension Metamask";
+        setTimeout(() => {
+          this.isError = false;
+        }, 5000);
+      } else {
+        this.isExtention = true;
+        // this.connectMetamaskSuccess = false;
       }
+    },
+    async connectMetamask() {
+      this.isConnect = 0;
+      const provider = new ethers.providers.Web3Provider(
+        window.ethereum,
+        "any"
+      );
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      this.signer = provider.getSigner();
+      this.addressWallet = await signer.getAddress();
+      this.connectMetamaskSuccess = false;
     },
     async getAllHeroes() {
       this.page = 1;
@@ -325,7 +354,6 @@ export default {
         "any"
       );
       await provider.send("eth_requestAccounts", []);
-      // this.signer = await provider.getSigner();
       const contract = new ethers.Contract(this.address, this.abi, provider);
       const allHero = await contract.getAllHeroes();
       this.allHeroFi = [...allHero];
@@ -383,15 +411,15 @@ export default {
           const { status } = await createHero.wait();
           if (status == 1) {
             this.successMes = "Create hero success";
-            this.isSuccess = true
+            this.isSuccess = true;
             await setTimeout(() => {
               this.isLoading = false;
-              this.isSuccess = false
+              this.isSuccess = false;
             }, 2000);
             this.getHeroesOfAccount();
           } else {
             this.errorMes = "Create error";
-            this.isError = true
+            this.isError = true;
             await setTimeout((this.isError = false), 2000);
           }
         } catch (error) {
@@ -439,7 +467,7 @@ export default {
           }, 2000);
         } else {
           this.errorMes = "Tranfer fail";
-          this.isError = true
+          this.isError = true;
           await setTimeout((this.isError = false), 2000);
         }
       } else if (this.inputAdressWallet == 0) {
@@ -458,5 +486,50 @@ export default {
 <style scoped>
 .setTabActive {
   background: red;
+}
+.select {
+  /* Reset Select */
+  appearance: none;
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+  /* Personalize */
+  flex: 1;
+  padding: 0 0;
+  color: #fff;
+  background-color: var(--darkgray);
+  background-image: none;
+  cursor: pointer;
+}
+/* Remove IE arrow */
+select::-ms-expand {
+  display: none;
+}
+/* Custom Select wrapper */
+.select {
+  position: relative;
+  display: flex;
+  width: 20em;
+  /* height: 3em; */
+  border-radius: .25em;
+  overflow: hidden;
+}
+.select select {
+  cursor: pointer;
+}
+/* Arrow */
+.select::after {
+  content: '\25BC';
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.7em;
+  background-color: #34495e;
+  transition: .25s all ease;
+  pointer-events: none;
+}
+/* Transition */
+.select:hover::after {
+  color: #f39c12;
 }
 </style>
