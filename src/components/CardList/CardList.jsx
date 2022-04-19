@@ -35,7 +35,7 @@ function CardList({ data = [], currentAcc, signer, getHeroOfAccount }) {
   return (
     <>
       <Grid
-        sx={{ mb: 3, minHeight: { xs: "1387px", sm: "1040px", lg: "694px" } }}
+        sx={{ mb: 3, minHeight: { xs: "1040px", sm: "694px" } }}
         container
         spacing={2}
       >

@@ -109,7 +109,7 @@ function Sidebar({ signer, getHeroOfAccount, onToggleMenu }) {
       return;
     }
     if (!formValues.fileUrl) {
-      notify.error("No photo yet");
+      notify.error("Please choose a photo");
       return;
     }
     setLoadingSubmit(true);

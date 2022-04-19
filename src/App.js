@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Backdrop, CardList, Header, Pagination, Sidebar } from "./components";
-import { CARD_PER_PAGE, CONTRACT_ADDRESS } from "./constants/globalConstants";
+import { CONTRACT_ADDRESS } from "./constants/globalConstants";
 import abi from "./HeroFi.json";
 import useContract from "./hooks/useContract";
 import { generateErrMsg } from "./utils/common";
@@ -20,6 +20,9 @@ function App() {
   const [tabNumber, setTabNumber] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [cards, setCards] = useState([]);
+  const [cardPerPage, setCardPerPage] = useState(() => {
+    return window.innerWidth > 1024 ? 8 : 6;
+  });
 
   useEffect(() => {
     (async () => {
@@ -38,8 +41,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const start = (currentPage - 1) * CARD_PER_PAGE;
-    const end = start + CARD_PER_PAGE;
+    const start = (currentPage - 1) * cardPerPage;
+    const end = start + cardPerPage;
     const result = [...data].slice(start, end);
     setCards(result);
 
@@ -47,7 +50,7 @@ function App() {
       top: 0,
       behavior: "smooth",
     });
-  }, [currentPage, data]);
+  }, [currentPage, data, cardPerPage]);
 
   useEffect(() => {
     let timeout = null;
@@ -55,7 +58,9 @@ function App() {
     const onWidthResize = () => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {
-        setWindowWidth(window.innerWidth);
+        const windowWidth = window.innerWidth;
+        windowWidth <= 1024 ? setCardPerPage(6) : setCardPerPage(8);
+        setWindowWidth(windowWidth);
       }, 400);
     };
 
@@ -183,7 +188,7 @@ function App() {
               getHeroOfAccount={getHeroOfAccount}
             />
             <Pagination
-              totalPage={Math.ceil(data.length / CARD_PER_PAGE)}
+              totalPage={Math.ceil(data.length / cardPerPage)}
               currentPage={currentPage}
               onPageChange={(page) => setCurrentPage(page)}
             />
