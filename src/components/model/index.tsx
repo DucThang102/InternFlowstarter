@@ -12,7 +12,7 @@ const Modal = (props: propsModal) => {
     const [showElemamt, setShowElement] = useState(show);
 
     const escFunction = useCallback(
-        (event) => {
+        (event: any) => {
             if (event.key === "Escape") {
                 onClose();
             }
