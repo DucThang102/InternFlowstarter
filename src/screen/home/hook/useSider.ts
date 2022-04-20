@@ -17,7 +17,11 @@ const useSider = (createHero: (data: any) => Promise<void>) => {
             return false;
         }
         if (!utils.validateImageSize(file)) {
-            notify.error("Dung lượng file quá lớn");
+            notify.error(
+                `Chỉ cho phép file có dung lượng nhỏ hơn ${
+                    utils.limitSize / 1024 / 1024
+                }Mb`
+            );
             return false;
         }
         return true;
